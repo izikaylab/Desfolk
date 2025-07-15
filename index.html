@@ -954,7 +954,7 @@
                     <li><a href="#services">Services</a></li>
                     <li><a href="#work">Work</a></li>
                     <li><a href="#contact">Contact</a></li>
-                    <li><a href="/about.html">About</a></li>
+                    <li><a href="about.html">About</a></li>
                 </ul>
             </div>
         </nav>
@@ -1287,19 +1287,28 @@ Get In Touch.
 
             const menuLinks = navMenu.querySelectorAll('a');
             menuLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = link.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
-                    if (targetSection) {
-                        closeMenu();
-                        setTimeout(() => {
-                            const headerHeight = document.querySelector('header').offsetHeight;
-                            const targetPosition = targetSection.offsetTop - headerHeight;
-                            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-                        }, 500);
-                    }
-                });
+                // Replace the existing click handler with this:
+link.addEventListener('click', (e) => {
+    const href = link.getAttribute('href');
+    
+    // Only prevent default for anchor links (#)
+    if (href.startsWith('#')) {
+        e.preventDefault();
+        const targetSection = document.querySelector(href);
+        if (targetSection) {
+            closeMenu();
+            setTimeout(() => {
+                const headerHeight = document.querySelector('header').offsetHeight;
+                const targetPosition = targetSection.offsetTop - headerHeight;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            }, 500);
+        }
+    } else {
+        // For page links (about.html), just close the menu
+        closeMenu();
+        // Browser will handle navigation normally
+    }
+});
             });
 
             function toggleMenu() {
