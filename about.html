@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About DesFolk Studio | Digital Craftsmanship</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reuse all existing styles from the main page */
+        :root {
+            --black: #000;
+            --white: #fff;
+            --gray: #f0f0f0;
+            --dark-bg: #0a0a0a;
+            --dark-text: #e7e7e7;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --studio-red: #ff3e3e;
+            --studio-blue: #4267ff;
+            --bg-primary: var(--white);
+            --text-primary: var(--black);
+            --border-primary: var(--black);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-bg-hover: rgba(255, 255, 255, 0.2);
+        }
+
+        .dark-mode {
+            --bg-primary: var(--dark-bg);
+            --text-primary: var(--dark-text);
+            --border-primary: var(--dark-text);
+            --gray: #1a1a1a;
+            --card-bg: rgba(0, 0, 0, 0.2);
+            --card-bg-hover: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 2000;
+        }
+
+        .dark-mode .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--studio-blue);
+            transition: width 0.2s ease-out;
+            filter: blur(1px);
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-5px);
+            background: var(--studio-blue);
+        }
+
+        .scroll-to-top svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        header {
+            position: fixed;
+            top: 4px;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-primary);
+            transition: all 0.5s ease;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .nav {
+            position: relative;
+            z-index: 1001;
+        }
+
+        .nav-toggle {
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 12px 24px;
+            border: 2px solid var(--text-primary);
+            transition: var(--transition);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .nav-toggle:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--text-primary);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nav-menu {
+            list-style: none;
+            text-align: center;
+        }
+
+        .nav-menu li {
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .nav-menu a {
+            color: var(--bg-primary);
+            text-decoration: none;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: inline-block;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .nav-menu a:hover {
+            transform: translateY(0) skewX(-10deg);
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 3.5rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0 5%;
+        }
+
+        .copyright {
+            position: absolute;
+            bottom: 3rem;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* ABOUT PAGE SPECIFIC STYLES */
+        .about-intro {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 5% 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            color: #fff; /* Fixed: Always white text on dark background */
+        }
+
+        .about-intro h1 {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-intro p {
+            font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+            max-width: 800px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-weight: 400;
+            opacity: 0;
+            transform: translateY(20px);
+            color: #fff; /* Fixed: Always white text */
+        }
+
+        .philosophy {
+            padding: 100px 5%;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .philosophy-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .philosophy h2 {
+            font-size: clamp(2rem, 6vw, 4.5rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 0.9;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .philosophy p {
+            font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+            max-width: 800px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-weight: 400;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .highlight {
+            color: var(--studio-blue);
+            font-weight: 600;
+        }
+
+        .contact-cta {
+            padding: 100px 5%;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .contact-cta h2 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .contact-cta p {
+            font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .contact-form {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 50px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            max-width: 800px; /* Fixed: Wider form */
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .dark-mode .contact-form {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-primary);
+            opacity: 0.6;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--studio-blue);
+            box-shadow: 0 0 0 3px rgba(66, 103, 255, 0.3);
+        }
+
+        .submit-btn {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            padding: 16px 32px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border-radius: 30px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            color: var(--white);
+        }
+
+        .dark-mode .submit-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--black);
+        }
+
+        .back-to-top-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .back-to-top {
+            background: none;
+            border: 2px solid var(--text-primary);
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-to-top::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--text-primary);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .back-to-top:hover {
+            color: var(--bg-primary);
+        }
+
+        .back-to-top:hover::before {
+            left: 0;
+        }
+
+        .about-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%);
+            z-index: 1;
+        }
+
+        .about-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #0a0a0a 0%, #1a1a1a 100%);
+            z-index: 0;
+        }
+
+        .philosophy-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            z-index: 1;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .nav {
+                top: 20px;
+                right: 20px;
+            }
+
+            .about-intro, .philosophy, .contact-cta {
+                padding: 80px 5% 60px;
+            }
+
+            .about-intro h1 {
+                margin-bottom: 2rem;
+            }
+
+            .contact-form {
+                padding: 30px;
+                max-width: 90%; /* Wider on mobile */
+            }
+
+            .scroll-to-top {
+                bottom: 70px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+            }
+
+            .copyright {
+                padding: 0 20px;
+                bottom: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <header>
+        <div class="logo">DesFolk.</div>
+        <nav class="nav">
+            <button class="nav-toggle" id="navToggle">Menu</button>
+            <div class="nav-overlay" id="navOverlay">
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/index.html#services">Services</a></li>
+                    <li><a href="/index.html#work">Work</a></li>
+                    <li><a href="/index.html#contact">Contact</a></li>
+                    <li><a href="/about.html">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="about-intro">
+        <div class="about-bg"></div>
+        <div class="about-overlay"></div>
+        <div class="about-content">
+            <h1>About DesFolk</h1>
+            <p>DESFOLK is a design and content studio built for <span class="highlight">THE BOLD</span>.</p>
+            <p>We bring together cinematography, animation, motion graphics, and digital design to create stories that move. Our work is clean yet alive, minimal yet memorable — shaped by instinct, not trend.</p>
+            <p>From screen to scroll, everything we touch is made to last — and made to feel.</p>
+        </div>
+    </section>
+
+    <section class="philosophy">
+        <div class="philosophy-overlay"></div>
+        <div class="philosophy-content">
+            <h2>Studio Philosophy</h2>
+            <p>We're called <span class="highlight">DESFOLK</span> for a reason.</p>
+            <p><span class="highlight">"DES"</span> for design, and <span class="highlight">"FOLK"</span> for people.</p>
+            <p>Because design only matters when it connects.</p>
+            <p>And every frame, every pixel, every piece of code made to feel human.</p>
+        </div>
+    </section>
+
+    <section class="contact-cta">
+        <h2>Got a story to tell?</h2>
+        <p>Let's make something bold, beautiful, and true.</p>
+        
+        <div class="contact-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" placeholder="Your full name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Your email address">
+            </div>
+            <div class="form-group">
+                <label for="project">Project Type</label>
+                <input type="text" id="project" placeholder="Website, Branding, Animation, etc.">
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" rows="5" placeholder="Tell us about your project..."></textarea>
+            </div>
+            <button class="submit-btn">Submit Project Request</button>
+        </div>
+
+        <div class="back-to-top-container">
+            <button class="back-to-top" id="backToTop">Back to Top</button>
+        </div>
+
+        <div class="copyright">© 2025 DesFolk Studio. All rights reserved.</div>
+    </section>
+
+    <button class="scroll-to-top" id="scrollToTop">
+        <svg viewBox="0 0 24 24">
+            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
+        </svg>
+    </button>
+
+    <button class="theme-toggle" id="themeToggle">
+        <svg viewBox="0 0 24 24">
+            <path d="M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z" />
+        </svg>
+    </button>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animate intro section
+        const introContent = document.querySelector('.about-content');
+        gsap.fromTo(introContent.querySelectorAll('p'), 
+            { opacity: 0, y: 20 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.3,
+                scrollTrigger: {
+                    trigger: introContent,
+                    start: "top 80%"
+                }
+            }
+        );
+        
+        // Animate philosophy section
+        const philosophyContent = document.querySelector('.philosophy-content');
+        gsap.fromTo(philosophyContent.querySelectorAll('p'), 
+            { opacity: 0, y: 20 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.3,
+                scrollTrigger: {
+                    trigger: philosophyContent,
+                    start: "top 80%"
+                }
+            }
+        );
+        
+        // Initialize navigation
+        initNavigation();
+        initDarkModeToggle();
+        initScrollToTop();
+        initProgressBar();
+
+        document.getElementById('backToTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        function initNavigation() {
+            const navToggle = document.getElementById('navToggle');
+            const navOverlay = document.getElementById('navOverlay');
+            const navMenu = document.getElementById('navMenu');
+            let isMenuOpen = false;
+
+            navToggle.addEventListener('click', toggleMenu);
+
+            const menuLinks = navMenu.querySelectorAll('a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    closeMenu();
+                });
+            });
+
+            function toggleMenu() {
+                !isMenuOpen ? openMenu() : closeMenu();
+            }
+
+            function openMenu() {
+                isMenuOpen = true;
+                navOverlay.classList.add('active');
+                navToggle.textContent = 'Close';
+                const menuLinks = navMenu.querySelectorAll('a');
+                gsap.fromTo(menuLinks, { y: '100%' }, {
+                    y: '0%',
+                    duration: 0.6,
+                    stagger: 0.1,
+                    ease: "power3.out",
+                    delay: 0.2
+                });
+            }
+
+            function closeMenu() {
+                isMenuOpen = false;
+                navOverlay.classList.remove('active');
+                navToggle.textContent = 'Menu';
+                const menuLinks = navMenu.querySelectorAll('a');
+                gsap.to(menuLinks, {
+                    y: '100%',
+                    duration: 0.4,
+                    stagger: 0.05,
+                    ease: "power3.in"
+                });
+            }
+        }
+
+        function initDarkModeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            const svgPath = themeToggle.querySelector('path');
+
+            if (prefersDarkScheme.matches) {
+                document.body.classList.add('dark-mode');
+                svgPath.setAttribute('d', 'M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z');
+            }
+
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    svgPath.setAttribute('d', 'M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z');
+                } else {
+                    svgPath.setAttribute('d', 'M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z');
+                }
+            });
+        }
+
+        function initScrollToTop() {
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+            window.addEventListener('scroll', () => {
+                scrollToTopBtn.classList.toggle('visible', window.scrollY > 500);
+            });
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        function initProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            window.addEventListener('scroll', () => {
+                const totalHeight = document.body.scrollHeight - window.innerHeight;
+                const progress = (window.scrollY / totalHeight) * 100;
+                progressBar.style.width = progress + '%';
+            });
+        }
+    });
+    </script>
+</body>
+</html>
