@@ -19,22 +19,28 @@
     <style>
         /* High-End Monochromatic System */
         :root {
+            /* Dark Mode (Cinematic Black) */
             --bg-primary: #050505; 
             --text-primary: #FFFFFF;
             --text-muted: rgba(255, 255, 255, 0.5);
             --border-primary: rgba(255, 255, 255, 0.15);
             --card-bg: rgba(10, 10, 10, 0.6);
             --nav-bg: rgba(5, 5, 5, 0.8);
+            
+            /* Cursor Text Logic */
             --cursor-text: #050505; 
         }
 
         body.light-mode {
+            /* Light Mode (Premium Gallery Paper) */
             --bg-primary: #F2F1EB; 
             --text-primary: #111111; 
             --text-muted: rgba(17, 17, 17, 0.6);
             --border-primary: rgba(17, 17, 17, 0.15);
             --card-bg: rgba(242, 241, 235, 0.5);
             --nav-bg: rgba(242, 241, 235, 0.8);
+            
+            /* Cursor Text Logic */
             --cursor-text: #F2F1EB; 
         }
 
@@ -80,7 +86,7 @@
             pointer-events: none;
         }
 
-        /* PERFECTED CURSOR LOGIC */
+        /* PERFECTED CURSOR LOGIC (Split Dot & Text) */
         .cursor-dot {
             position: fixed;
             top: 0;
@@ -165,6 +171,13 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--text-primary);
+            position: relative;
+            z-index: 1001; 
+        }
+
+        .nav {
+            position: relative;
+            z-index: 1001;
         }
 
         .nav-toggle {
@@ -177,6 +190,55 @@
             text-transform: uppercase;
             color: var(--text-primary);
             cursor: pointer;
+            transition: color 0.4s ease;
+        }
+
+        /* Full-Screen Menu Overlay */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--text-primary); 
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nav-menu {
+            list-style: none;
+            text-align: center;
+        }
+
+        .nav-menu li {
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .nav-menu a {
+            color: var(--bg-primary); 
+            text-decoration: none;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: inline-block;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .nav-menu a:hover {
+            transform: translateY(0) skewX(-10deg);
         }
 
         /* Hero */
@@ -333,7 +395,7 @@
             transition: color 0.4s ease;
         }
 
-        /* 3D Carousel */
+        /* 3D Carousel - Original Links & Formatting */
         .work-section { padding: 150px 0; overflow: hidden; }
 
         .carousel-wrapper-3d {
@@ -464,7 +526,7 @@
             bottom: 40px;
             right: 40px;
             z-index: 1000;
-            background: transparent;
+            background: var(--bg-primary);
             color: var(--text-primary);
             border: 1px solid var(--border-primary);
             width: 50px;
@@ -473,26 +535,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: border-color 0.4s ease;
-            backdrop-filter: blur(5px);
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             cursor: pointer;
         }
 
-        .theme-toggle:hover { border-color: var(--text-primary); }
+        .theme-toggle:hover { border-color: var(--text-primary); transform: scale(1.05); }
         .theme-toggle svg { width: 18px; height: 18px; fill: currentColor; transition: fill 0.4s ease; }
 
-        /* -------------------------------------------
-           MOBILE OPTIMIZATIONS (The Fixes)
-           ------------------------------------------- */
+        /* --------------------------------------------------------
+           MOBILE & TOUCH OPTIMIZATIONS (FLAWLESS BUG FIXES)
+           -------------------------------------------------------- */
         @media (max-width: 768px) {
             header { background: var(--nav-bg); padding: 1.5rem 5%; }
             .theme-toggle { bottom: 20px; right: 20px; }
             
-            /* Discipline Alignment & Logic Fix */
+            /* Discipline Carousel Mobile Layout */
             .services-section { padding: 100px 0; }
             .horizontal-container { 
                 gap: 5vw; 
-                padding: 0 7.5vw; /* Perfectly centers 85vw cards */
+                padding: 0 calc(50vw - 42.5vw); /* Perfectly centers 85vw cards */
             }
             .service-card { 
                 width: 85vw; 
@@ -501,23 +563,22 @@
             }
 
             /* Force Videos to be Visible & Beautiful on Touch Screens */
+            .service-card::after { opacity: 1; } 
             .service-video {
-                opacity: 0.8;
-                filter: grayscale(0%);
-                transform: scale(1.05);
+                opacity: 0.7; 
+                filter: grayscale(0%); 
             }
-            .service-card::after { opacity: 0.8; }
-            .service-title, .service-subtitle, .service-number { color: #ffffff; }
-            .service-desc { color: rgba(255,255,255,0.9); }
+            .service-title, .service-subtitle, .service-number { color: #ffffff !important; }
+            .service-desc { color: rgba(255,255,255,0.9) !important; }
 
-            /* 3D Carousel Mobile Adjustments */
+            /* 3D Carousel Mobile Adjustments (Fixed overlapping bleed) */
             .work-section { padding: 80px 0; }
-            .carousel-wrapper-3d { height: 80vh; perspective: 1000px; }
+            .carousel-wrapper-3d { height: 75vh; perspective: 1200px; }
             .carousel-item-3d { 
-                width: 65vw; 
-                height: 40vh; 
-                opacity: 1; /* Ensure visible on mobile */
-                filter: grayscale(0%); /* Remove grayscale on mobile */
+                width: 60vw; /* Slightly narrower to prevent clipping */
+                height: 45vh; 
+                opacity: 1;
+                filter: grayscale(0%); 
             }
         }
     </style>
@@ -541,7 +602,17 @@
 
     <header>
         <div class="logo">DesFolk.</div>
-        <button class="nav-toggle interactable" data-cursor="Menu">Menu</button>
+        <nav class="nav">
+            <button class="nav-toggle interactable" id="navToggle" data-cursor="Menu">Menu</button>
+            <div class="nav-overlay" id="navOverlay">
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#hero" class="interactable" data-cursor="Go">Home</a></li>
+                    <li><a href="#services" class="interactable" data-cursor="Go">Disciplines</a></li>
+                    <li><a href="#work" class="interactable" data-cursor="Go">Work</a></li>
+                    <li><a href="#contact" class="interactable" data-cursor="Go">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
     <section class="hero" id="hero">
@@ -726,18 +797,77 @@
         }
         tick();
 
-        // 4. Premium Monochromatic Theme Toggle
+        // 4. Premium Day/Night Toggle & Restored Menu Logic
         const themeToggleBtn = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
+        const navToggle = document.getElementById('navToggle');
+        const navOverlay = document.getElementById('navOverlay');
+        const navMenu = document.getElementById('navMenu');
+        let isMenuOpen = false;
 
+        navToggle.addEventListener('click', toggleMenu);
+
+        const menuLinks = navMenu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(href);
+                    if (targetSection) {
+                        closeMenu();
+                        setTimeout(() => {
+                            window.scrollTo({ top: targetSection.offsetTop, behavior: 'smooth' });
+                        }, 500);
+                    }
+                } else {
+                    closeMenu();
+                }
+            });
+        });
+
+        function toggleMenu() {
+            !isMenuOpen ? openMenu() : closeMenu();
+        }
+
+        function openMenu() {
+            isMenuOpen = true;
+            navOverlay.classList.add('active');
+            navToggle.textContent = 'Close';
+            navToggle.style.color = "var(--bg-primary)"; 
+            
+            gsap.fromTo(menuLinks, { y: '100%' }, {
+                y: '0%',
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "power3.out",
+                delay: 0.2
+            });
+        }
+
+        function closeMenu() {
+            isMenuOpen = false;
+            navOverlay.classList.remove('active');
+            navToggle.textContent = 'Menu';
+            navToggle.style.color = "var(--text-primary)";
+            
+            gsap.to(menuLinks, {
+                y: '100%',
+                duration: 0.4,
+                stagger: 0.05,
+                ease: "power3.in"
+            });
+        }
+
+        // Theme Toggle Logic
         themeToggleBtn.addEventListener('click', () => {
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
             
             if (isLight) {
                 themeIcon.setAttribute('d', 'M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z');
-                gsap.to(material.uniforms.uColor1.value, { r: 0.95, g: 0.94, b: 0.92, duration: 1.5, ease: "power2.inOut" });
-                gsap.to(material.uniforms.uColor2.value, { r: 0.90, g: 0.89, b: 0.87, duration: 1.5, ease: "power2.inOut" });
+                gsap.to(material.uniforms.uColor1.value, { r: 0.96, g: 0.96, b: 0.96, duration: 1.5, ease: "power2.inOut" });
+                gsap.to(material.uniforms.uColor2.value, { r: 0.90, g: 0.90, b: 0.90, duration: 1.5, ease: "power2.inOut" });
             } else {
                 themeIcon.setAttribute('d', 'M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z');
                 gsap.to(material.uniforms.uColor1.value, { r: 0.02, g: 0.02, b: 0.02, duration: 1.5, ease: "power2.inOut" });
@@ -745,19 +875,19 @@
             }
         });
 
-        // 5. Capabilities Content & BROWSER AUTOPLAY FIX
+        // 5. Capabilities Content & Custom Videos
         const services = [
             {
                 title: "The Lens",
                 subtitle: "Live Action",
                 desc: "Capturing the raw, unfiltered human element. We shoot with a cinematic eye, anchoring your narrative in striking, grounded reality.",
-                videoSrc: "https://assets.mixkit.co/videos/preview/mixkit-ink-swirling-in-water-568-large.mp4"
+                videoSrc: "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
             },
             {
                 title: "The Illusion",
                 subtitle: "VFX & Post-Reality",
                 desc: "Bending reality to our will. We craft invisible, seamless visual effects that make the impossible feel entirely tangible.",
-                videoSrc: "https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-connection-lines-97354-large.mp4"
+                videoSrc: "https://assets.mixkit.co/videos/preview/mixkit-ink-swirling-in-water-568-large.mp4"
             },
             {
                 title: "The Kinetic",
@@ -769,7 +899,7 @@
                 title: "The Interface",
                 subtitle: "Spatial & Interactive",
                 desc: "A beautiful video is meant to be watched; a beautiful digital space is meant to be felt. We build fluid, intuitive experiences.",
-                videoSrc: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4"
+                videoSrc: "https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-connection-lines-97354-large.mp4"
             }
         ];
 
@@ -780,7 +910,9 @@
             card.className = 'service-card interactable';
             
             card.innerHTML = `
-                <video class="service-video" src="${service.videoSrc}" loop muted playsinline crossorigin="anonymous"></video>
+                <div class="video-wrapper">
+                    <video class="service-video" src="${service.videoSrc}" autoplay loop muted playsinline></video>
+                </div>
                 <div class="service-content">
                     <div class="service-subtitle">${service.subtitle}</div>
                     <div class="service-title">${service.title}</div>
@@ -795,17 +927,6 @@
             const subtitle = card.querySelector('.service-subtitle');
             const desc = card.querySelector('.service-desc');
             const num = card.querySelector('.service-number');
-            
-            // THE AUTOPLAY BYPASS
-            vid.muted = true;
-            let playPromise = vid.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    // Force play on first touch/scroll if blocked
-                    window.addEventListener('scroll', () => vid.play(), { once: true });
-                    window.addEventListener('touchstart', () => vid.play(), { once: true });
-                });
-            }
             
             if (window.matchMedia("(pointer: fine)").matches) {
                 card.addEventListener('mouseenter', () => {
@@ -827,42 +948,62 @@
 
         if (window.bindCursorInteractions) window.bindCursorInteractions();
 
-        // 6. GSAP UNIVERSAL LAYOUTS (Both Mobile & Desktop)
+        // 6. GSAP UNIVERSAL LAYOUTS WITH FIXED MOBILE MATH
         let mm = gsap.matchMedia();
 
         mm.add({
             isDesktop: "(min-width: 769px)",
             isMobile: "(max-width: 768px)"
         }, (context) => {
-            let { isDesktop } = context.conditions;
+            let { isDesktop, isMobile } = context.conditions;
 
-            // HORIZONTAL SCROLL (Universal)
-            container.style.paddingRight = isDesktop ? "30vw" : "10vw"; 
+            // HORIZONTAL SCROLL ALGORITHM (No sticky snap on mobile!)
             let scrollAmount = container.scrollWidth - window.innerWidth;
-            const cards = gsap.utils.toArray('.service-card');
 
-            gsap.to(container, {
-                x: -scrollAmount,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".services-carousel",
-                    pin: true,
-                    scrub: 1,
-                    start: "center center",
-                    end: () => `+=${scrollAmount * (isDesktop ? 3 : 2)}`, 
-                    snap: {
-                        snapTo: 1 / (cards.length - 1),
-                        duration: 0.4,
-                        ease: "power1.inOut"
-                    },
-                    invalidateOnRefresh: true
-                }
-            });
+            if (isDesktop) {
+                container.style.paddingRight = "30vw";
+                scrollAmount = container.scrollWidth - window.innerWidth;
+                const cards = gsap.utils.toArray('.service-card');
+                
+                gsap.to(container, {
+                    x: -scrollAmount,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".services-carousel",
+                        pin: true,
+                        scrub: 1,
+                        start: "center center",
+                        end: () => `+=${scrollAmount * 2.5}`, 
+                        snap: {
+                            snapTo: 1 / (cards.length - 1),
+                            duration: 0.4,
+                            ease: "power1.inOut"
+                        },
+                        invalidateOnRefresh: true
+                    }
+                });
+            } else {
+                // Mobile: Free horizontal scroll, no snapping
+                gsap.to(container, {
+                    x: -scrollAmount,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".services-carousel",
+                        pin: true,
+                        scrub: 1,
+                        start: "center center",
+                        end: () => `+=${scrollAmount * 1.5}`, 
+                        invalidateOnRefresh: true
+                    }
+                });
+            }
 
-            // 3D CAROUSEL (Universal)
+            // 3D CAROUSEL ALGORITHM
             const items = document.querySelectorAll(".carousel-item-3d");
             const track = document.getElementById("carouselTrack");
-            const radius = isDesktop ? 450 : 250;
+            
+            // INCREASED MOBILE RADIUS TO FIX OVERLAPPING/BLEEDING!
+            const radius = isDesktop ? 450 : 350; 
             
             items.forEach((item, i) => {
                 const theta = (360 / items.length) * i;
