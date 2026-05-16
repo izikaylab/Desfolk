@@ -172,12 +172,8 @@
             text-transform: uppercase;
             color: var(--text-primary);
             position: relative;
-            z-index: 1001; 
-        }
-
-        .nav {
-            position: relative;
             z-index: 1001;
+            text-decoration: none;
         }
 
         .nav-toggle {
@@ -191,6 +187,8 @@
             color: var(--text-primary);
             cursor: pointer;
             transition: color 0.4s ease;
+            position: relative;
+            z-index: 1001;
         }
 
         /* Full-Screen Menu Overlay */
@@ -395,7 +393,7 @@
             transition: color 0.4s ease;
         }
 
-        /* 3D Carousel - Original Links & Formatting */
+        /* 3D Carousel */
         .work-section { padding: 150px 0; overflow: hidden; }
 
         .carousel-wrapper-3d {
@@ -535,26 +533,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.4s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: border-color 0.4s ease;
+            backdrop-filter: blur(5px);
             cursor: pointer;
         }
 
-        .theme-toggle:hover { border-color: var(--text-primary); transform: scale(1.05); }
+        .theme-toggle:hover { border-color: var(--text-primary); }
         .theme-toggle svg { width: 18px; height: 18px; fill: currentColor; transition: fill 0.4s ease; }
 
-        /* --------------------------------------------------------
-           MOBILE & TOUCH OPTIMIZATIONS (FLAWLESS BUG FIXES)
-           -------------------------------------------------------- */
+        /* Mobile Fixes */
         @media (max-width: 768px) {
             header { background: var(--nav-bg); padding: 1.5rem 5%; }
             .theme-toggle { bottom: 20px; right: 20px; }
             
-            /* Discipline Carousel Mobile Layout */
             .services-section { padding: 100px 0; }
             .horizontal-container { 
                 gap: 5vw; 
-                padding: 0 calc(50vw - 42.5vw); /* Perfectly centers 85vw cards */
+                padding: 0 calc(50vw - 42.5vw); 
             }
             .service-card { 
                 width: 85vw; 
@@ -562,7 +557,6 @@
                 padding: 2rem; 
             }
 
-            /* Force Videos to be Visible & Beautiful on Touch Screens */
             .service-card::after { opacity: 1; } 
             .service-video {
                 opacity: 0.7; 
@@ -571,11 +565,10 @@
             .service-title, .service-subtitle, .service-number { color: #ffffff !important; }
             .service-desc { color: rgba(255,255,255,0.9) !important; }
 
-            /* 3D Carousel Mobile Adjustments (Fixed overlapping bleed) */
             .work-section { padding: 80px 0; }
             .carousel-wrapper-3d { height: 75vh; perspective: 1200px; }
             .carousel-item-3d { 
-                width: 60vw; /* Slightly narrower to prevent clipping */
+                width: 60vw; 
                 height: 45vh; 
                 opacity: 1;
                 filter: grayscale(0%); 
@@ -601,14 +594,14 @@
     </button>
 
     <header>
-        <div class="logo">DesFolk.</div>
+        <a href="index.html" class="logo interactable" data-cursor="Home">DesFolk.</a>
         <nav class="nav">
             <button class="nav-toggle interactable" id="navToggle" data-cursor="Menu">Menu</button>
             <div class="nav-overlay" id="navOverlay">
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="#hero" class="interactable" data-cursor="Go">Home</a></li>
                     <li><a href="#services" class="interactable" data-cursor="Go">Disciplines</a></li>
-                    <li><a href="#work" class="interactable" data-cursor="Go">Work</a></li>
+                    <li><a href="about.html" class="interactable" data-cursor="Go">About</a></li>
                     <li><a href="#contact" class="interactable" data-cursor="Go">Contact</a></li>
                 </ul>
             </div>
@@ -805,6 +798,7 @@
         const navMenu = document.getElementById('navMenu');
         let isMenuOpen = false;
 
+        // Overlay Navigation Logic
         navToggle.addEventListener('click', toggleMenu);
 
         const menuLinks = navMenu.querySelectorAll('a');
@@ -821,6 +815,7 @@
                         }, 500);
                     }
                 } else {
+                    // Navigate to another page (about.html) smoothly
                     closeMenu();
                 }
             });
@@ -859,7 +854,7 @@
             });
         }
 
-        // Theme Toggle Logic
+        // Theme Toggle
         themeToggleBtn.addEventListener('click', () => {
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
@@ -875,7 +870,7 @@
             }
         });
 
-        // 5. Capabilities Content & Custom Videos
+        // 5. Capabilities Content & Videos
         const services = [
             {
                 title: "The Lens",
@@ -911,7 +906,7 @@
             
             card.innerHTML = `
                 <div class="video-wrapper">
-                    <video class="service-video" src="${service.videoSrc}" autoplay loop muted playsinline></video>
+                    <video class="service-video" src="${service.videoSrc}" autoplay loop muted playsinline crossorigin="anonymous"></video>
                 </div>
                 <div class="service-content">
                     <div class="service-subtitle">${service.subtitle}</div>
@@ -927,6 +922,16 @@
             const subtitle = card.querySelector('.service-subtitle');
             const desc = card.querySelector('.service-desc');
             const num = card.querySelector('.service-number');
+            
+            // THE AUTOPLAY BYPASS
+            vid.muted = true;
+            let playPromise = vid.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    window.addEventListener('scroll', () => vid.play(), { once: true });
+                    window.addEventListener('touchstart', () => vid.play(), { once: true });
+                });
+            }
             
             if (window.matchMedia("(pointer: fine)").matches) {
                 card.addEventListener('mouseenter', () => {
@@ -955,9 +960,8 @@
             isDesktop: "(min-width: 769px)",
             isMobile: "(max-width: 768px)"
         }, (context) => {
-            let { isDesktop, isMobile } = context.conditions;
+            let { isDesktop } = context.conditions;
 
-            // HORIZONTAL SCROLL ALGORITHM (No sticky snap on mobile!)
             let scrollAmount = container.scrollWidth - window.innerWidth;
 
             if (isDesktop) {
@@ -983,7 +987,6 @@
                     }
                 });
             } else {
-                // Mobile: Free horizontal scroll, no snapping
                 gsap.to(container, {
                     x: -scrollAmount,
                     ease: "none",
@@ -998,11 +1001,8 @@
                 });
             }
 
-            // 3D CAROUSEL ALGORITHM
             const items = document.querySelectorAll(".carousel-item-3d");
             const track = document.getElementById("carouselTrack");
-            
-            // INCREASED MOBILE RADIUS TO FIX OVERLAPPING/BLEEDING!
             const radius = isDesktop ? 450 : 350; 
             
             items.forEach((item, i) => {
