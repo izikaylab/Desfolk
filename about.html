@@ -4,39 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DesFolk Studio - Digital craftsmanship in film, motion, code and content">
-    <meta name="keywords" content="design studio, animation, web development, digital experiences">
-    <title>About DesFolk Studio | Digital Craftsmanship</title>
-    <link rel="icon" type="image/png" href="/favicon.png"/>
+    <meta name="description" content="About DesFolk Studio - An independent digital atelier shaping stories through film, motion, and code.">
+    <title>About DesFolk | Cinematic Craftsmanship</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    
     <style>
-        /* Reuse all existing styles from the main page */
+        /* High-End Monochromatic System */
         :root {
-            --black: #000;
-            --white: #fff;
-            --gray: #f0f0f0;
-            --dark-bg: #0a0a0a;
-            --dark-text: #e7e7e7;
-            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            --studio-red: #ff3e3e;
-            --studio-blue: #ff3e3e;
-            --bg-primary: var(--white);
-            --text-primary: var(--black);
-            --border-primary: var(--black);
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --card-bg-hover: rgba(255, 255, 255, 0.2);
+            /* Dark Mode (Cinematic Black) */
+            --bg-primary: #050505; 
+            --text-primary: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border-primary: rgba(255, 255, 255, 0.15);
+            --nav-bg: rgba(5, 5, 5, 0.9);
+            --cursor-text: #050505; 
         }
 
-        .dark-mode {
-            --bg-primary: var(--dark-bg);
-            --text-primary: var(--dark-text);
-            --border-primary: var(--dark-text);
-            --gray: #1a1a1a;
-            --card-bg: rgba(0, 0, 0, 0.2);
-            --card-bg-hover: rgba(0, 0, 0, 0.3);
+        body.light-mode {
+            /* Light Mode (Crisp White & Black) */
+            --bg-primary: #FFFFFF; 
+            --text-primary: #000000; 
+            --text-muted: rgba(0, 0, 0, 0.6);
+            --border-primary: rgba(0, 0, 0, 0.1);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --cursor-text: #FFFFFF; 
         }
 
         * {
@@ -45,17 +44,87 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
+        @media (pointer: fine) {
+            body, a, button, input, textarea { cursor: none; }
         }
 
         body {
-            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'IBM Plex Sans', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             overflow-x: hidden;
             line-height: 1.6;
-            transition: background 0.5s ease, color 0.5s ease;
+            transition: background-color 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), color 0.6s ease;
+        }
+
+        /* Cinematic Film Grain Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9000;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* PERFECTED CURSOR LOGIC */
+        .cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #FFFFFF; 
+            mix-blend-mode: difference;
+            pointer-events: none;
+            z-index: 99998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), height 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .cursor-dot.active {
+            width: 80px;
+            height: 80px;
+        }
+
+        .cursor-text-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 99999; 
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--cursor-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        @media (pointer: coarse) {
+            .cursor-dot, .cursor-text-container { display: none !important; }
+            body, a, button, input, textarea { cursor: auto !important; }
+        }
+
+        /* Layout Z-Indexing */
+        header, section, .progress-container, .theme-toggle {
+            position: relative;
+            z-index: 10;
         }
 
         .progress-container {
@@ -63,116 +132,67 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: rgba(0, 0, 0, 0.1);
+            height: 2px;
+            background: transparent;
             z-index: 2000;
-        }
-
-        .dark-mode .progress-container {
-            background: rgba(255, 255, 255, 0.1);
         }
 
         .progress-bar {
             height: 100%;
             width: 0%;
-            background: var(--studio-blue);
-            transition: width 0.2s ease-out;
-            filter: blur(1px);
-        }
-
-        .scroll-to-top {
-            position: fixed;
-            bottom: 90px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
             background: var(--text-primary);
-            color: var(--bg-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: width 0.1s ease-out;
         }
 
-        .scroll-to-top.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .scroll-to-top:hover {
-            transform: translateY(-5px);
-            background: var(--studio-blue);
-        }
-
-        .scroll-to-top svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
+        /* Header */
         header {
             position: fixed;
-            top: 4px;
+            top: 0;
             left: 0;
             width: 100%;
-            padding: 1.5rem 5%;
+            padding: 2rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border-primary);
-            transition: all 0.5s ease;
+            background: transparent;
+            transition: background-color 0.5s ease;
         }
 
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            color: var(--text-primary);
             position: relative;
             z-index: 1001;
-        }
-
-        .nav {
-            position: relative;
-            z-index: 1001;
+            text-decoration: none;
         }
 
         .nav-toggle {
             background: none;
             border: none;
-            font-size: 14px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            cursor: pointer;
-            padding: 12px 24px;
-            border: 2px solid var(--text-primary);
-            transition: var(--transition);
-            background: var(--bg-primary);
             color: var(--text-primary);
+            cursor: pointer;
+            transition: color 0.4s ease;
+            position: relative;
+            z-index: 1001;
         }
 
-        .nav-toggle:hover {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-        }
-
+        /* Full-Screen Menu Overlay */
         .nav-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
-            background: var(--text-primary);
+            background: var(--text-primary); 
             z-index: 999;
             display: flex;
             align-items: center;
@@ -198,7 +218,7 @@
         }
 
         .nav-menu a {
-            color: var(--bg-primary);
+            color: var(--bg-primary); 
             text-decoration: none;
             font-size: clamp(2rem, 5vw, 4rem);
             font-weight: 700;
@@ -213,573 +233,490 @@
             transform: translateY(0) skewX(-10deg);
         }
 
-        .section-title {
-            font-size: clamp(1.8rem, 4vw, 3.5rem);
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 60px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 0 5%;
-        }
-
-        .copyright {
-            position: absolute;
-            bottom: 3rem;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            opacity: 0.7;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        .theme-toggle svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
-        /* ABOUT PAGE SPECIFIC STYLES */
-        .about-intro {
+        /* About Typography & Layout */
+        .about-section {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 120px 5% 80px;
-            position: relative;
-            overflow: hidden;
+            padding: 150px 5%;
         }
 
         .about-content {
             max-width: 1200px;
             margin: 0 auto;
-            position: relative;
-            z-index: 10;
-            color: #fff; /* Fixed: Always white text on dark background */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10vw;
+            align-items: flex-start;
         }
 
-        .about-intro h1 {
-            font-size: clamp(2.5rem, 8vw, 6rem);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-            line-height: 0.95;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .about-intro p {
-            font-size: clamp(1.2rem, 1.8vw, 1.5rem);
-            max-width: 800px;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            font-weight: 400;
-            opacity: 0;
-            transform: translateY(20px);
-            color: #fff; /* Fixed: Always white text */
-        }
-
-        .philosophy {
-            padding: 100px 5%;
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .philosophy-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 10;
-        }
-
-        .philosophy h2 {
-            font-size: clamp(2rem, 6vw, 4.5rem);
-            font-weight: 800;
+        .about-title {
+            font-size: clamp(3rem, 7vw, 7rem);
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: -0.03em;
             line-height: 0.9;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
         }
 
-        .philosophy p {
-            font-size: clamp(1.2rem, 1.8vw, 1.5rem);
-            max-width: 800px;
-            margin-bottom: 2rem;
-            line-height: 1.6;
+        .about-title i {
+            font-style: italic;
             font-weight: 400;
-            opacity: 0;
-            transform: translateY(20px);
+            color: var(--text-muted);
         }
 
-        .highlight {
-            color: var(--studio-blue);
-            font-weight: 600;
-        }
-
-        .contact-cta {
-            padding: 100px 5%;
-            background: var(--bg-primary);
+        .about-text p {
+            font-size: clamp(1.2rem, 1.8vw, 1.8rem);
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
             color: var(--text-primary);
-            position: relative;
+            font-weight: 400;
+        }
+
+        .about-text p.muted {
+            color: var(--text-muted);
+            font-size: clamp(1rem, 1.2vw, 1.2rem);
+        }
+
+        .ethos-section {
+            padding: 150px 5%;
+            border-top: 1px solid var(--border-primary);
+        }
+
+        .ethos-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5vw;
+        }
+
+        .ethos-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ethos-number {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-primary);
+            padding-bottom: 1rem;
+        }
+
+        .ethos-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .ethos-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact-section {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            text-align: center;
+            align-items: center;
+            padding: 100px 5%;
+            border-top: 1px solid var(--border-primary);
         }
 
-        .contact-cta h2 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
+        .contact-section h2 {
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: -0.03em;
             line-height: 0.9;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+        
+        .contact-section p.contact-sub {
+            font-size: clamp(1rem, 1.2vw, 1.2rem);
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 550px;
+            margin-bottom: 4rem;
         }
 
-        .contact-cta p {
-            font-size: clamp(1.2rem, 1.8vw, 1.5rem);
-            max-width: 700px;
-            margin: 0 auto 3rem;
-            line-height: 1.6;
-            font-weight: 400;
-        }
+        .contact-form { width: 100%; max-width: 600px; }
 
-        .contact-form {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 50px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            max-width: 800px; /* Fixed: Wider form */
-            margin: 0 auto;
-            text-align: left;
-        }
-
-        .dark-mode .contact-form {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group textarea {
+        .form-group input, .form-group textarea {
             width: 100%;
-            padding: 15px;
+            padding: 20px 0;
             background: transparent;
-            border: 1px solid var(--border-primary);
+            border: none;
+            border-bottom: 1px solid var(--border-primary);
             color: var(--text-primary);
             font-family: 'IBM Plex Sans', sans-serif;
-            font-size: 16px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            transition: border-color 0.4s ease;
         }
 
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: var(--text-primary);
-            opacity: 0.6;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group input:focus, .form-group textarea:focus {
             outline: none;
-            border-color: var(--studio-blue);
-            box-shadow: 0 0 0 3px rgba(66, 103, 255, 0.3);
+            border-bottom-color: var(--text-primary);
         }
 
         .submit-btn {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            border: none;
-            padding: 16px 32px;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition);
-            border-radius: 30px;
-            width: 100%;
-        }
-
-        .submit-btn:hover {
-            background: rgba(0, 0, 0, 0.9);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            color: var(--white);
-        }
-
-        .dark-mode .submit-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--black);
-        }
-
-        .back-to-top-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            margin-top: 30px;
-        }
-
-        .back-to-top {
-            background: none;
-            border: 2px solid var(--text-primary);
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            transition: var(--transition);
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: transparent;
             color: var(--text-primary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .back-to-top::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
+            border: 1px solid var(--text-primary);
+            padding: 20px 40px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 2px;
             width: 100%;
-            height: 100%;
-            background: var(--text-primary);
-            transition: left 0.4s ease;
-            z-index: -1;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
         }
 
-        .back-to-top:hover {
-            color: var(--bg-primary);
+        .submit-btn:hover { background: var(--text-primary); color: var(--bg-primary); }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 1000;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
         }
 
-        .back-to-top:hover::before {
-            left: 0;
-        }
+        .theme-toggle:hover { border-color: var(--text-primary); transform: scale(1.05); }
+        .theme-toggle svg { width: 18px; height: 18px; fill: currentColor; transition: fill 0.4s ease; }
 
-        .about-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%);
-            z-index: 1;
-        }
-
-        .about-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #0a0a0a 0%, #1a1a1a 100%);
-            z-index: 0;
-        }
-
-        .philosophy-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.1);
-            z-index: 1;
-        }
-
-        /* Mobile adjustments */
+        /* Mobile Layout */
         @media (max-width: 768px) {
-            .nav {
-                top: 20px;
-                right: 20px;
-            }
-
-            .about-intro, .philosophy, .contact-cta {
-                padding: 80px 5% 60px;
-            }
-
-            .about-intro h1 {
-                margin-bottom: 2rem;
-            }
-
-            .contact-form {
-                padding: 30px;
-                max-width: 90%; /* Wider on mobile */
-            }
-
-            .scroll-to-top {
-                bottom: 70px;
-                right: 20px;
-                width: 40px;
-                height: 40px;
-            }
-
-            .copyright {
-                padding: 0 20px;
-                bottom: 1.5rem;
-            }
+            header { background: var(--nav-bg); padding: 1.5rem 5%; }
+            .theme-toggle { bottom: 20px; right: 20px; }
+            .about-content { grid-template-columns: 1fr; gap: 3rem; }
+            .ethos-grid { grid-template-columns: 1fr; gap: 4rem; }
+            .about-section { padding-top: 150px; }
         }
     </style>
 </head>
 
 <body>
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
+    <div class="noise-overlay"></div>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-text-container"></div>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+    <button class="theme-toggle interactable" id="themeToggle" data-cursor="Switch">
+        <svg viewBox="0 0 24 24">
+            <path id="themeIcon" d="M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z" />
+        </svg>
+    </button>
 
     <header>
-        <div class="logo">DesFolk.</div>
+        <a href="index.html" class="logo interactable" data-cursor="Home">DesFolk.</a>
         <nav class="nav">
-            <button class="nav-toggle" id="navToggle">Menu</button>
+            <button class="nav-toggle interactable" id="navToggle" data-cursor="Menu">Menu</button>
             <div class="nav-overlay" id="navOverlay">
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="/index.html">Home</a></li>
-                    <li><a href="/index.html#services">Services</a></li>
-                    <li><a href="/index.html#work">Work</a></li>
-                    <li><a href="/index.html#contact">Contact</a></li>
-                    <li><a href="/about.html">About</a></li>
+                    <li><a href="index.html" class="interactable" data-cursor="Go">Home</a></li>
+                    <li><a href="index.html#services" class="interactable" data-cursor="Go">Disciplines</a></li>
+                    <li><a href="about.html" class="interactable" data-cursor="Go">About</a></li>
+                    <li><a href="#contact" class="interactable" data-cursor="Go">Contact</a></li>
                 </ul>
             </div>
         </nav>
     </header>
 
-    <section class="about-intro">
-        <div class="about-bg"></div>
-        <div class="about-overlay"></div>
+    <section class="about-section">
         <div class="about-content">
-            <h1>About DesFolk</h1>
-            <p>DESFOLK is a design and content studio built for <span class="highlight">THE BOLD</span>.</p>
-            <p>We bring together cinematography, animation, motion graphics, and digital design to create stories that move. Our work is clean yet alive, minimal yet memorable — shaped by instinct, not trend.</p>
-            <p>From screen to scroll, everything we touch is made to last — and made to feel.</p>
+            <h1 class="about-title gs-reveal">The<br><i>Atelier.</i></h1>
+            <div class="about-text">
+                <p class="gs-reveal">We don't just create content; we engineer perception. DesFolk is an independent digital atelier operating at the intersection of cinematic truth and digital illusion.</p>
+                <p class="muted gs-reveal">We build worlds for brands that refuse to blend in. Our work is clean yet alive, minimal yet memorable—shaped by instinct, not trend. From the raw truth of the camera lens to the limitless canvas of the screen, everything we touch is made to last.</p>
+            </div>
         </div>
     </section>
 
-    <section class="philosophy">
-        <div class="philosophy-overlay"></div>
-        <div class="philosophy-content">
-            <h2>Studio Philosophy</h2>
-            <p>We're called <span class="highlight">DESFOLK</span> for a reason.</p>
-            <p><span class="highlight">"DES"</span> for design, and <span class="highlight">"FOLK"</span> for people.</p>
-            <p>Because design only matters when it connects.</p>
-            <p>And every frame, every pixel, every piece of code made to feel human.</p>
+    <section class="ethos-section">
+        <div class="ethos-grid">
+            <div class="ethos-card gs-reveal">
+                <div class="ethos-number">01.</div>
+                <div class="ethos-title">Design</div>
+                <div class="ethos-desc">The "Des" in our name. We believe design only matters when it is razor-sharp. We strip away the noise to craft visual systems that command attention and communicate absolute authority.</div>
+            </div>
+            <div class="ethos-card gs-reveal">
+                <div class="ethos-number">02.</div>
+                <div class="ethos-title">People</div>
+                <div class="ethos-desc">The "Folk" in our name. Technology is our medium, but human connection is our metric. Every frame, every pixel, and every line of code is engineered to resonate on an emotional level.</div>
+            </div>
+            <div class="ethos-card gs-reveal">
+                <div class="ethos-number">03.</div>
+                <div class="ethos-title">Motion</div>
+                <div class="ethos-desc">Stillness is silence. We treat motion as the pulse of the digital experience. Through fluid physics, animation, and interaction, we ensure your narrative is never stagnant.</div>
+            </div>
         </div>
     </section>
 
-    <section class="contact-cta">
-        <h2>Got a story to tell?</h2>
-        <p>Let's make something bold, beautiful, and true.</p>
-        
+    <section id="contact" class="contact-section">
+        <h2>The Next Frame<br><i>Is Yours.</i></h2>
+        <p class="contact-sub">We collaborate with forward-thinking brands to craft digital experiences with a cinematic pulse. Let's discuss your vision.</p>
         <div class="contact-form">
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" placeholder="Your full name">
+                <input type="text" placeholder="YOUR NAME" class="interactable" data-cursor="Type">
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Your email address">
+                <input type="email" placeholder="YOUR EMAIL" class="interactable" data-cursor="Type">
             </div>
             <div class="form-group">
-                <label for="project">Project Type</label>
-                <input type="text" id="project" placeholder="Website, Branding, Animation, etc.">
+                <textarea rows="3" placeholder="PROJECT DETAILS" class="interactable" data-cursor="Type"></textarea>
             </div>
-            <div class="form-group">
-                <label for="message">Message</label>
-                <textarea id="message" rows="5" placeholder="Tell us about your project..."></textarea>
-            </div>
-            <button class="submit-btn">Submit Project Request</button>
+            <button class="submit-btn interactable" data-cursor="Submit">Start The Conversation</button>
         </div>
-
-        <div class="back-to-top-container">
-            <button class="back-to-top" id="backToTop">Back to Top</button>
-        </div>
-
-        <div class="copyright">© 2025 DesFolk Studio. All rights reserved.</div>
     </section>
-
-    <button class="scroll-to-top" id="scrollToTop">
-        <svg viewBox="0 0 24 24">
-            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
-        </svg>
-    </button>
-
-    <button class="theme-toggle" id="themeToggle">
-        <svg viewBox="0 0 24 24">
-            <path d="M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z" />
-        </svg>
-    </button>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Initialize animations
         gsap.registerPlugin(ScrollTrigger);
-        
-        // Animate intro section
-        const introContent = document.querySelector('.about-content');
-        gsap.fromTo(introContent.querySelectorAll('p'), 
-            { opacity: 0, y: 20 },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                stagger: 0.3,
-                scrollTrigger: {
-                    trigger: introContent,
-                    start: "top 80%"
-                }
-            }
-        );
-        
-        // Animate philosophy section
-        const philosophyContent = document.querySelector('.philosophy-content');
-        gsap.fromTo(philosophyContent.querySelectorAll('p'), 
-            { opacity: 0, y: 20 },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                stagger: 0.3,
-                scrollTrigger: {
-                    trigger: philosophyContent,
-                    start: "top 80%"
-                }
-            }
-        );
-        
-        // Initialize navigation
-        initNavigation();
-        initDarkModeToggle();
-        initScrollToTop();
-        initProgressBar();
 
-        document.getElementById('backToTop').addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // 1. Lenis Smooth Scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            smoothTouch: false,
         });
 
-        function initNavigation() {
-            const navToggle = document.getElementById('navToggle');
-            const navOverlay = document.getElementById('navOverlay');
-            const navMenu = document.getElementById('navMenu');
-            let isMenuOpen = false;
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000) });
+        gsap.ticker.lagSmoothing(0, 0);
 
-            navToggle.addEventListener('click', toggleMenu);
+        // 2. PERFECTED SPLIT CURSOR
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorText = document.querySelector('.cursor-text-container');
+        
+        if (window.matchMedia("(pointer: fine)").matches) {
+            const xToDot = gsap.quickTo(cursorDot, "x", {duration: 0.15, ease: "power3"});
+            const yToDot = gsap.quickTo(cursorDot, "y", {duration: 0.15, ease: "power3"});
+            const xToText = gsap.quickTo(cursorText, "x", {duration: 0.15, ease: "power3"});
+            const yToText = gsap.quickTo(cursorText, "y", {duration: 0.15, ease: "power3"});
 
-            const menuLinks = navMenu.querySelectorAll('a');
-            menuLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    closeMenu();
-                });
+            window.addEventListener("mousemove", e => {
+                xToDot(e.clientX);
+                yToDot(e.clientY);
+                xToText(e.clientX);
+                yToText(e.clientY);
             });
 
-            function toggleMenu() {
-                !isMenuOpen ? openMenu() : closeMenu();
-            }
-
-            function openMenu() {
-                isMenuOpen = true;
-                navOverlay.classList.add('active');
-                navToggle.textContent = 'Close';
-                const menuLinks = navMenu.querySelectorAll('a');
-                gsap.fromTo(menuLinks, { y: '100%' }, {
-                    y: '0%',
-                    duration: 0.6,
-                    stagger: 0.1,
-                    ease: "power3.out",
-                    delay: 0.2
+            window.bindCursorInteractions = function() {
+                document.querySelectorAll('.interactable, a, button, input, textarea').forEach(el => {
+                    el.addEventListener('mouseenter', (e) => {
+                        const text = e.target.getAttribute('data-cursor') || '';
+                        cursorText.innerText = text;
+                        cursorDot.classList.add('active');
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        cursorText.innerText = '';
+                        cursorDot.classList.remove('active');
+                    });
                 });
-            }
-
-            function closeMenu() {
-                isMenuOpen = false;
-                navOverlay.classList.remove('active');
-                navToggle.textContent = 'Menu';
-                const menuLinks = navMenu.querySelectorAll('a');
-                gsap.to(menuLinks, {
-                    y: '100%',
-                    duration: 0.4,
-                    stagger: 0.05,
-                    ease: "power3.in"
-                });
-            }
+            };
+            window.bindCursorInteractions();
         }
 
-        function initDarkModeToggle() {
-            const themeToggle = document.getElementById('themeToggle');
-            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-            const svgPath = themeToggle.querySelector('path');
+        // 3. Three.js WebGL Pure Monochromatic Fluid
+        const canvas = document.querySelector('#webgl-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.z = 2;
 
-            if (prefersDarkScheme.matches) {
-                document.body.classList.add('dark-mode');
-                svgPath.setAttribute('d', 'M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z');
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const geometry = new THREE.PlaneGeometry(5, 5, 128, 128);
+
+        const material = new THREE.ShaderMaterial({
+            vertexShader: `
+                uniform float uTime;
+                varying vec2 vUv;
+                varying float vElevation;
+                void main() {
+                    vUv = uv;
+                    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+                    float elevation = sin(modelPosition.x * 2.0 + uTime * 0.4) * 0.08 
+                                    + sin(modelPosition.y * 1.5 + uTime * 0.3) * 0.08;
+                    modelPosition.z += elevation;
+                    vElevation = elevation;
+                    gl_Position = projectionMatrix * viewMatrix * modelPosition;
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 uColor1;
+                uniform vec3 uColor2;
+                varying float vElevation;
+                void main() {
+                    float mixStrength = (vElevation + 0.16) * 3.0;
+                    vec3 color = mix(uColor1, uColor2, mixStrength);
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `,
+            uniforms: {
+                uTime: { value: 0 },
+                uColor1: { value: new THREE.Color('#050505') }, 
+                uColor2: { value: new THREE.Color('#141414') }  
             }
+        });
 
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-                if (document.body.classList.contains('dark-mode')) {
-                    svgPath.setAttribute('d', 'M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z');
+        const plane = new THREE.Mesh(geometry, material);
+        plane.rotation.x = -Math.PI * 0.2; 
+        scene.add(plane);
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        const clock = new THREE.Clock();
+        function tick() {
+            material.uniforms.uTime.value = clock.getElapsedTime() * 0.4; 
+            if (window.matchMedia("(pointer: fine)").matches) {
+                const rect = cursorDot.getBoundingClientRect();
+                const mouseX = rect.left || window.innerWidth / 2;
+                const mouseY = rect.top || window.innerHeight / 2;
+                plane.rotation.y = (mouseX / window.innerWidth - 0.5) * 0.05;
+                plane.rotation.x = -Math.PI * 0.2 + (mouseY / window.innerHeight - 0.5) * 0.05;
+            }
+            renderer.render(scene, camera);
+            window.requestAnimationFrame(tick);
+        }
+        tick();
+
+        // 4. Premium Monochromatic Theme Toggle & Menu Logic
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const navToggle = document.getElementById('navToggle');
+        const navOverlay = document.getElementById('navOverlay');
+        const navMenu = document.getElementById('navMenu');
+        let isMenuOpen = false;
+
+        // Navigation
+        navToggle.addEventListener('click', toggleMenu);
+
+        const menuLinks = navMenu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(href);
+                    if (targetSection) {
+                        closeMenu();
+                        setTimeout(() => {
+                            window.scrollTo({ top: targetSection.offsetTop, behavior: 'smooth' });
+                        }, 500);
+                    }
                 } else {
-                    svgPath.setAttribute('d', 'M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z');
+                    // It's a link to another page (like index.html)
+                    closeMenu();
                 }
             });
+        });
+
+        function toggleMenu() {
+            !isMenuOpen ? openMenu() : closeMenu();
         }
 
-        function initScrollToTop() {
-            const scrollToTopBtn = document.getElementById('scrollToTop');
-            window.addEventListener('scroll', () => {
-                scrollToTopBtn.classList.toggle('visible', window.scrollY > 500);
-            });
-            scrollToTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+        function openMenu() {
+            isMenuOpen = true;
+            navOverlay.classList.add('active');
+            navToggle.textContent = 'Close';
+            navToggle.style.color = "var(--bg-primary)"; 
+            
+            gsap.fromTo(menuLinks, { y: '100%' }, {
+                y: '0%',
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "power3.out",
+                delay: 0.2
             });
         }
 
-        function initProgressBar() {
-            const progressBar = document.getElementById('progressBar');
-            window.addEventListener('scroll', () => {
-                const totalHeight = document.body.scrollHeight - window.innerHeight;
-                const progress = (window.scrollY / totalHeight) * 100;
-                progressBar.style.width = progress + '%';
+        function closeMenu() {
+            isMenuOpen = false;
+            navOverlay.classList.remove('active');
+            navToggle.textContent = 'Menu';
+            navToggle.style.color = "var(--text-primary)";
+            
+            gsap.to(menuLinks, {
+                y: '100%',
+                duration: 0.4,
+                stagger: 0.05,
+                ease: "power3.in"
             });
         }
+
+        // Theme Toggle
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            
+            if (isLight) {
+                themeIcon.setAttribute('d', 'M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z');
+                gsap.to(material.uniforms.uColor1.value, { r: 0.96, g: 0.96, b: 0.96, duration: 1.5, ease: "power2.inOut" });
+                gsap.to(material.uniforms.uColor2.value, { r: 0.90, g: 0.90, b: 0.90, duration: 1.5, ease: "power2.inOut" });
+            } else {
+                themeIcon.setAttribute('d', 'M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z');
+                gsap.to(material.uniforms.uColor1.value, { r: 0.02, g: 0.02, b: 0.02, duration: 1.5, ease: "power2.inOut" });
+                gsap.to(material.uniforms.uColor2.value, { r: 0.08, g: 0.08, b: 0.08, duration: 1.5, ease: "power2.inOut" });
+            }
+        });
+
+        // 5. Scroll Reveals
+        const revealElements = document.querySelectorAll('.gs-reveal');
+        revealElements.forEach(el => {
+            gsap.fromTo(el, 
+                { opacity: 0, y: 40 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 1, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%",
+                    }
+                }
+            );
+        });
+
+        // 6. Progress Bar
+        window.addEventListener('scroll', () => {
+            const progress = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        });
     });
     </script>
 </body>
