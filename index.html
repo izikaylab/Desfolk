@@ -4,39 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DesFolk Studio - Digital craftsmanship in film, motion, code and content">
-    <meta name="keywords" content="design studio, animation, web development, digital experiences">
-    <title>DesFolk Studio | Digital Craftsmanship</title>
-    <link rel="icon" type="image/png" href="/favicon.png"/>
+    <meta name="description" content="DesFolk Studio - Reality, Reimagined. Digital craftsmanship in film, motion, code, and content.">
+    <title>DesFolk Studio | Cinematic Craftsmanship</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    
     <style>
+        /* High-End Monochromatic System */
         :root {
-            --black: #000;
-            --white: #fff;
-            --gray: #f0f0f0;
-            --dark-bg: #0a0a0a;
-            --dark-text: #e7e7e7;
-            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            --studio-red: #ff3e3e;
-            --studio-blue: #ff3e3e;
-            --bg-primary: var(--white);
-            --text-primary: var(--black);
-            --border-primary: var(--black);
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --card-bg-hover: rgba(255, 255, 255, 0.2);
+            --bg-primary: #050505; 
+            --text-primary: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border-primary: rgba(255, 255, 255, 0.15);
+            --card-bg: rgba(10, 10, 10, 0.6);
+            --nav-bg: rgba(5, 5, 5, 0.8);
+            --cursor-text: #050505; 
         }
 
-        .dark-mode {
-            --bg-primary: var(--dark-bg);
-            --text-primary: var(--dark-text);
-            --border-primary: var(--dark-text);
-            --gray: #1a1a1a;
-            --card-bg: rgba(0, 0, 0, 0.2);
-            --card-bg-hover: rgba(0, 0, 0, 0.3);
+        body.light-mode {
+            --bg-primary: #F2F1EB; 
+            --text-primary: #111111; 
+            --text-muted: rgba(17, 17, 17, 0.6);
+            --border-primary: rgba(17, 17, 17, 0.15);
+            --card-bg: rgba(242, 241, 235, 0.5);
+            --nav-bg: rgba(242, 241, 235, 0.8);
+            --cursor-text: #F2F1EB; 
         }
 
         * {
@@ -45,17 +44,87 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
+        @media (pointer: fine) {
+            body, a, button, input, textarea { cursor: none; }
         }
 
         body {
-            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'IBM Plex Sans', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             overflow-x: hidden;
             line-height: 1.6;
-            transition: background 0.5s ease, color 0.5s ease;
+            transition: background-color 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), color 0.8s ease;
+        }
+
+        /* Cinematic Film Grain Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9000;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* PERFECTED CURSOR LOGIC */
+        .cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #FFFFFF; 
+            mix-blend-mode: difference;
+            pointer-events: none;
+            z-index: 99998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), height 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .cursor-dot.active {
+            width: 80px;
+            height: 80px;
+        }
+
+        .cursor-text-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 99999; 
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--cursor-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        @media (pointer: coarse) {
+            .cursor-dot, .cursor-text-container { display: none !important; }
+            body, a, button, input, textarea { cursor: auto !important; }
+        }
+
+        /* Layout Z-Indexing */
+        header, section, .progress-container, .theme-toggle {
+            position: relative;
+            z-index: 10;
         }
 
         .progress-container {
@@ -63,157 +132,54 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: rgba(0, 0, 0, 0.1);
+            height: 2px;
+            background: transparent;
             z-index: 2000;
-        }
-
-        .dark-mode .progress-container {
-            background: rgba(255, 255, 255, 0.1);
         }
 
         .progress-bar {
             height: 100%;
             width: 0%;
-            background: var(--studio-blue);
-            transition: width 0.2s ease-out;
-            filter: blur(1px);
-        }
-
-        .scroll-to-top {
-            position: fixed;
-            bottom: 90px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
             background: var(--text-primary);
-            color: var(--bg-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: width 0.1s ease-out;
         }
 
-        .scroll-to-top.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .scroll-to-top:hover {
-            transform: translateY(-5px);
-            background: var(--studio-blue);
-        }
-
-        .scroll-to-top svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
+        /* Header */
         header {
             position: fixed;
-            top: 4px;
+            top: 0;
             left: 0;
             width: 100%;
-            padding: 1.5rem 5%;
+            padding: 2rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border-primary);
-            transition: all 0.5s ease;
+            background: transparent;
+            transition: background-color 0.5s ease;
         }
 
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            position: relative;
-            z-index: 1001;
-        }
-
-        .nav {
-            position: relative;
-            z-index: 1001;
+            color: var(--text-primary);
         }
 
         .nav-toggle {
             background: none;
             border: none;
-            font-size: 14px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            cursor: pointer;
-            padding: 12px 24px;
-            border: 2px solid var(--text-primary);
-            transition: var(--transition);
-            background: var(--bg-primary);
-            /* Fixed dark mode visibility */
             color: var(--text-primary);
+            cursor: pointer;
         }
 
-        .nav-toggle:hover {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-        }
-
-        .nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: var(--text-primary);
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.5s ease;
-        }
-
-        .nav-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .nav-menu {
-            list-style: none;
-            text-align: center;
-        }
-
-        .nav-menu li {
-            margin: 30px 0;
-            overflow: hidden;
-        }
-
-        .nav-menu a {
-            color: var(--bg-primary);
-            text-decoration: none;
-            font-size: clamp(2rem, 5vw, 4rem);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            display: inline-block;
-            transform: translateY(100%);
-            transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
-        }
-
-        .nav-menu a:hover {
-            transform: translateY(0) skewX(-10deg);
-        }
-
+        /* Hero */
         .hero {
             height: 100vh;
             display: flex;
@@ -222,208 +188,160 @@
             align-items: center;
             padding: 0 5%;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 20;
-            max-width: 1200px;
-            padding-top: 10vh;
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 9vw, 7rem);
-            font-weight: 800;
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: -0.03em;
-            line-height: 0.95;
-            margin: 0 auto 1.5rem;
-            position: relative;
-            overflow: hidden;
+            letter-spacing: -0.04em;
+            line-height: 0.85;
+            margin: 0 auto;
         }
 
-        .hero h1 .word {
-            display: inline-block;
-            overflow: hidden;
-            vertical-align: top;
-            margin-bottom: 0.5rem;
-        }
-
-        .hero h1 .char {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(1em);
+        .hero h1 i {
+            font-style: italic;
+            font-weight: 400;
+            color: var(--text-muted);
         }
 
         .hero p {
-            font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+            font-size: clamp(1rem, 1.3vw, 1.3rem);
             max-width: 600px;
-            margin: 3rem auto 0;
-            line-height: 1.6;
+            margin: 2.5rem auto 0;
+            color: var(--text-muted);
             font-weight: 400;
-            color: rgba(255, 255, 255, 0.85);
-            opacity: 0;
-            transform: translateY(30px);
+            letter-spacing: 0.5px;
         }
 
-        .dark-mode .hero p {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .hero-scroll {
-            position: absolute;
-            bottom: 3rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            z-index: 20;
-        }
-
-        .hero-scroll span {
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .scroll-line {
-            width: 1px;
-            height: 60px;
-            background: var(--text-primary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .scroll-line::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: var(--text-primary);
-            border-radius: 2px;
-            animation: scrollLine 2s infinite ease;
-        }
-
-        @keyframes scrollLine {
-            0% {
-                top: -20px;
-            }
-
-            100% {
-                top: 100%;
-            }
-        }
-
-        .services-section {
-            background: var(--bg-primary);
-            padding: 100px 0;
-        }
+        /* Services */
+        .services-section { padding: 150px 0; overflow: hidden; }
 
         .section-title {
-            font-size: clamp(1.8rem, 4vw, 3.5rem);
-            font-weight: 700;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 600;
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 100px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             padding: 0 5%;
+            color: var(--text-primary);
         }
 
-        .services-carousel {
-            height: 100vh;
+        .services-carousel { position: relative; width: 100%; }
+
+        .horizontal-container {
+            display: flex;
+            gap: 5vw;
+            padding: 0 5vw;
+            width: fit-content; 
+        }
+
+        .service-card {
+            width: 40vw; 
+            height: 65vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 3.5rem;
+            border: 1px solid var(--border-primary);
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             position: relative;
+            flex-shrink: 0;
             overflow: hidden;
-            background: var(--bg-primary);
-            z-index: 10;
+            transition: border-color 0.5s ease;
         }
 
-        .carousel-pin {
+        .service-card:hover { border-color: var(--text-primary); }
+
+        .service-video {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: center;
+            object-fit: cover;
+            opacity: 0.3; 
+            filter: grayscale(100%); 
+            transform: scale(1);
+            z-index: 0;
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+            pointer-events: none;
         }
 
-        .horizontal-container {
-            display: flex;
-            position: absolute;
-            height: 100%;
-            align-items: center;
-            gap: 4vw;
-            padding: 0 5%;
+        @media (pointer: fine) {
+            .service-card:hover .service-video {
+                opacity: 0.9;
+                filter: grayscale(0%); 
+                transform: scale(1.05); 
+            }
+            .service-card:hover::after { opacity: 1; }
         }
 
-        /* UPDATED SERVICE CARD STYLES */
-        .service-card {
-            width: 30vw;
-            height: 70vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 2rem;
-            border: 1px solid var(--border-primary);
+        .service-content, .service-number {
             position: relative;
-            transition: var(--transition);
-            will-change: transform;
-            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80%;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            z-index: 1;
+            opacity: 0.5; 
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .service-subtitle {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         .service-title {
-            font-size: clamp(2rem, 3.5vw, 4rem);
+            font-size: clamp(2.5rem, 4vw, 4.5rem);
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: -0.03em;
             line-height: 0.9;
-            position: relative;
-            overflow: hidden;
-            z-index: 2;
-            min-height: 1.5em;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            transition: color 0.4s ease;
+        }
+        
+        .service-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 90%;
+            line-height: 1.6;
+            transition: color 0.4s ease;
         }
 
-        .service-title span {
-            display: inline-block;
-            transition: var(--transition);
+        .service-number { 
+            font-size: 2rem; 
+            color: var(--text-muted);
+            font-weight: 300;
+            transition: color 0.4s ease;
         }
 
-        .service-card:hover {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-        }
-
-        .service-card:hover .service-title span {
-            transform: translateY(-100%);
-        }
-
-        .service-number {
-            font-size: 1.5rem;
-            font-weight: 600;
-            z-index: 2;
-        }
-
-        .work-section {
-            background: var(--bg-primary);
-            padding: 100px 0;
-        }
+        /* 3D Carousel */
+        .work-section { padding: 150px 0; overflow: hidden; }
 
         .carousel-wrapper-3d {
             height: 100vh;
-            perspective: 1500px;
+            perspective: 2000px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            background: var(--bg-primary);
-            position: relative;
         }
 
         .carousel-track-3d {
@@ -431,119 +349,51 @@
             height: 80vh;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
         }
 
         .carousel-item-3d {
             width: 28vw;
-            max-width: 380px;
-            height: 42vh;
+            max-width: 400px;
+            height: 55vh;
             position: absolute;
             top: 50%;
             left: 50%;
             transform-style: preserve-3d;
-            transform: translate(-50%, -50%) rotateY(0deg) translateZ(500px);
             overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            opacity: 0.9;
-            transition: all 0.4s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            filter: grayscale(100%);
+            transition: filter 0.5s ease, border-color 0.5s ease;
+            border: 1px solid var(--border-primary);
+            background: #000;
+            text-decoration: none;
         }
 
-        .carousel-item-3d:hover {
-            opacity: 1;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
-            z-index: 10;
-            transform: translate(-50%, -50%) scale(1.05) translateZ(500px);
-        }
+        .carousel-item-3d:hover { filter: grayscale(0%); z-index: 100; border-color: var(--text-primary); }
 
         .carousel-item-3d img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.9) contrast(1.1);
-            transition: transform 0.4s ease;
+            opacity: 0.8;
+            transform: scale(1.1);
+            transition: transform 1s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.5s ease;
         }
 
-        .carousel-item-3d:hover img {
-            transform: scale(1.05);
-        }
+        .carousel-item-3d:hover img { transform: scale(1); opacity: 1; }
 
         .carousel-title-3d {
             position: absolute;
-            bottom: 15px;
-            left: 15px;
-            font-size: 1.2rem;
-            color: var(--text-primary);
-            z-index: 10;
+            bottom: 25px;
+            left: 25px;
+            font-size: 1rem;
+            color: #fff; 
             font-weight: 700;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 30px;
-            backdrop-filter: blur(4px);
-            transition: all 0.3s ease;
-        }
-
-        .dark-mode .carousel-title-3d {
-            background: rgba(0, 0, 0, 0.7);
-            color: var(--dark-text);
-        }
-
-        .carousel-item-3d:hover .carousel-title-3d {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-        }
-
-        .scroll-prompt {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 100;
-            color: var(--text-primary);
-            font-size: 14px;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            opacity: 0.8;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
-        .scroll-arrow {
-            width: 18px;
-            height: 28px;
-            border: 2px solid var(--text-primary);
-            border-radius: 10px;
-            position: relative;
-            margin-top: 10px;
-        }
-
-        .scroll-arrow::after {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 3px;
-            height: 7px;
-            background: var(--text-primary);
-            border-radius: 2px;
-            animation: scrollPulse 1.5s infinite;
-        }
-
-        @keyframes scrollPulse {
-            0% {
-                top: 6px;
-                opacity: 1;
-            }
-
-            100% {
-                top: 14px;
-                opacity: 0;
-            }
-        }
-
+        /* Contact Section */
         .contact-section {
             min-height: 100vh;
             display: flex;
@@ -551,861 +401,493 @@
             justify-content: center;
             align-items: center;
             padding: 100px 5%;
-            text-align: center;
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            position: relative;
-        }
-
-        .contact-content {
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
         }
 
         .contact-section h2 {
-            font-size: clamp(2rem, 6vw, 4.5rem);
-            font-weight: 800;
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: -0.03em;
             line-height: 0.9;
-            margin: 0 auto 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+        
+        .contact-section p.contact-sub {
+            font-size: clamp(1rem, 1.2vw, 1.2rem);
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 550px;
+            margin-bottom: 4rem;
         }
 
-        .contact-form {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 50px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: left;
-        }
+        .contact-form { width: 100%; max-width: 600px; }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group textarea {
+        .form-group input, .form-group textarea {
             width: 100%;
-            padding: 15px;
+            padding: 20px 0;
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: var(--bg-primary);
+            border: none;
+            border-bottom: 1px solid var(--border-primary);
+            color: var(--text-primary);
             font-family: 'IBM Plex Sans', sans-serif;
-            font-size: 16px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            transition: border-color 0.4s ease;
         }
 
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-            opacity: 0.8;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group input:focus, .form-group textarea:focus {
             outline: none;
-            border-color: var(--studio-blue);
-            box-shadow: 0 0 0 3px rgba(66, 103, 255, 0.3);
+            border-bottom-color: var(--text-primary);
         }
 
         .submit-btn {
-            background: var(--bg-primary);
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: transparent;
             color: var(--text-primary);
-            border: none;
-            padding: 16px 32px;
-            font-size: 14px;
-            font-weight: 600;
+            border: 1px solid var(--text-primary);
+            padding: 20px 40px;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            width: 100%;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition);
-            border-radius: 30px;
-            width: 100%;
         }
 
-        .submit-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            color: var(--black);
-        }
+        .submit-btn:hover { background: var(--text-primary); color: var(--bg-primary); }
 
-        .copyright {
-            position: absolute;
-            bottom: 3rem;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            opacity: 0.7;
-        }
-
+        /* Theme Toggle */
         .theme-toggle {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 40px;
+            right: 40px;
             z-index: 1000;
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        .theme-toggle svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
-        /* FIXED: Hero button now properly visible in dark mode */
-        .hero-btn {
-            background: none;
-            border: 2px solid #fff;
-            padding: 16px 32px;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            transition: border-color 0.4s ease;
+            backdrop-filter: blur(5px);
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition);
-            margin-top: 3rem;
-            color: #fff;
         }
 
-        .hero-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: #fff;
-            transition: left 0.4s ease;
-            z-index: -1;
-        }
+        .theme-toggle:hover { border-color: var(--text-primary); }
+        .theme-toggle svg { width: 18px; height: 18px; fill: currentColor; transition: fill 0.4s ease; }
 
-        .hero-btn:hover {
-            color: #000;
-        }
-
-        .hero-btn:hover::before {
-            left: 0;
-        }
-
-        .back-to-top-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            margin-top: 30px;
-        }
-
-        .back-to-top {
-            background: none;
-            border: 2px solid var(--bg-primary);
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            transition: var(--transition);
-            color: var(--bg-primary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .back-to-top::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-primary);
-            transition: left 0.4s ease;
-            z-index: -1;
-        }
-
-        .back-to-top:hover {
-            color: var(--text-primary);
-        }
-
-        .back-to-top:hover::before {
-            left: 0;
-        }
-
-        /* Video Background */
-        .hero-video-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .hero-video {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            transform: translate(-50%, -50%) scale(1.05);
-            filter: brightness(0.85);
-            transition: transform 1.5s cubic-bezier(0.33, 1, 0.68, 1);
-        }
-
-        /* Overlay for text readability */
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 100%);
-            z-index: 2;
-        }
-
-        /* Particle effect */
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: #fff;
-            border-radius: 50%;
-            opacity: 0.5;
-            animation: particlePulse 2s infinite;
-        }
-
-        @keyframes particlePulse {
-            0%, 100% { 
-                transform: scale(1); 
-                opacity: 0.3; 
-                box-shadow: 0 0 5px rgba(255,255,255,0.5);
-            }
-            50% { 
-                transform: scale(1.5); 
-                opacity: 0.8; 
-                box-shadow: 0 0 10px rgba(255,255,255,0.8);
-            }
-        }
-
-        /* Video control button */
-        .video-control {
-            position: absolute;
-            bottom: 120px;
-            right: 30px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 30;
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .video-control:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.1);
-        }
-
-        .video-control svg {
-            width: 20px;
-            height: 20px;
-            fill: #fff;
-        }
-
-        /* Text enhancements */
-        .hero h1 {
-            color: #fff;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .hero p {
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        .hero-highlight {
-            color: var(--studio-blue);
-        }
-
-        /* Mobile adjustments */
+        /* -------------------------------------------
+           MOBILE OPTIMIZATIONS (The Fixes)
+           ------------------------------------------- */
         @media (max-width: 768px) {
-            .nav {
-                top: 20px;
-                right: 20px;
-            }
-
-            .service-card {
-                width: 80vw;
-                height: 60vh;
-            }
-
-            .hero h1 {
-                font-size: clamp(2.5rem, 12vw, 5rem);
-            }
-
-            .carousel-item-3d {
-                width: 50vw;
-                height: 35vh;
-                max-width: 300px;
-                transform: translate(-50%, -50%) rotateY(0deg) translateZ(300px);
-            }
-
-            .carousel-title-3d {
-                font-size: 1rem;
-            }
-
-            .nav-menu a {
-                font-size: clamp(1.8rem, 6vw, 3rem);
-            }
-
-            .contact-form {
-                padding: 30px;
-            }
-
-            .scroll-to-top {
-                bottom: 70px;
-                right: 20px;
-                width: 40px;
-                height: 40px;
-            }
-
-            .hero-video {
-                transform: translate(-50%, -50%) scale(1.2);
-            }
+            header { background: var(--nav-bg); padding: 1.5rem 5%; }
+            .theme-toggle { bottom: 20px; right: 20px; }
             
-            .video-control {
-                bottom: 100px;
-                right: 20px;
-                width: 36px;
-                height: 36px;
+            /* Discipline Alignment & Logic Fix */
+            .services-section { padding: 100px 0; }
+            .horizontal-container { 
+                gap: 5vw; 
+                padding: 0 7.5vw; /* Perfectly centers 85vw cards */
             }
-            .dark-mode .video-loading {
-                border-top-color: var(--studio-blue);
-                border-color: rgba(255, 255, 255, 0.2);
+            .service-card { 
+                width: 85vw; 
+                height: 60vh; 
+                padding: 2rem; 
             }
-            
-            .copyright {
-                padding: 0 20px;
-                bottom: 1.5rem;
+
+            /* Force Videos to be Visible & Beautiful on Touch Screens */
+            .service-video {
+                opacity: 0.8;
+                filter: grayscale(0%);
+                transform: scale(1.05);
+            }
+            .service-card::after { opacity: 0.8; }
+            .service-title, .service-subtitle, .service-number { color: #ffffff; }
+            .service-desc { color: rgba(255,255,255,0.9); }
+
+            /* 3D Carousel Mobile Adjustments */
+            .work-section { padding: 80px 0; }
+            .carousel-wrapper-3d { height: 80vh; perspective: 1000px; }
+            .carousel-item-3d { 
+                width: 65vw; 
+                height: 40vh; 
+                opacity: 1; /* Ensure visible on mobile */
+                filter: grayscale(0%); /* Remove grayscale on mobile */
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
+    <div class="noise-overlay"></div>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-text-container"></div>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+    <button class="theme-toggle interactable" id="themeToggle" data-cursor="Switch">
+        <svg viewBox="0 0 24 24">
+            <path id="themeIcon" d="M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z" />
+        </svg>
+    </button>
 
     <header>
         <div class="logo">DesFolk.</div>
-        <nav class="nav">
-            <button class="nav-toggle" id="navToggle">Menu</button>
-            <div class="nav-overlay" id="navOverlay">
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#work">Work</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="about.html">About</a></li>
-                </ul>
-            </div>
-        </nav>
+        <button class="nav-toggle interactable" data-cursor="Menu">Menu</button>
     </header>
 
     <section class="hero" id="hero">
-        <div class="hero-video-container">
-            <video class="hero-video" id="heroVideo" autoplay muted loop playsinline>
-                <source src="/showreel_web.mp4" type="video/mp4">
-                <div class="video-fallback" style="position:absolute;top:0;left:0;width:100%;height:100%;background: linear-gradient(45deg, #0a0a0a 0%, #1a1a1a 100%);"></div>
-            </video>
-            <div class="hero-overlay"></div>
-            <div class="particles" id="particles"></div>
-        </div>
-        
-        <div class="hero-content">
-            <h1 id="heroTitle">
-                <span class="word"><span class="char">D</span><span class="char">e</span><span class="char">s</span><span class="char">i</span><span class="char">g</span><span class="char">n</span></span>
-                <span class="word"><span class="char">t</span><span class="char">h</span><span class="char">a</span><span class="char">t</span></span>
-                <span class="word"><span class="char">m</span><span class="char">o</span><span class="char">v</span><span class="char">e</span><span class="char">s</span></span>
-            </h1>
-            <p>a creative studio shaping stories <span class="hero-highlight">through film, motion, code, and content.</span> We craft digital experiences that feel bold, cinematic, and deeply human.</p>
-            <button class="hero-btn" id="heroBtn">Explore Our Work</button>
-        </div>
-        
-        <div class="hero-scroll">
-            <div class="scroll-line"></div>
-        </div>
-        
-        <button class="video-control" id="videoControl">
-            <svg viewBox="0 0 24 24">
-                <path id="playPauseIcon" d="M6,4 L10,4 L10,20 L6,20 Z M14,4 L18,4 L18,20 L14,20 Z" />
-            </svg>
-        </button>
+        <h1 id="heroTitle">Reality,<br><i>Reimagined.</i></h1>
+        <p>From the raw truth of the camera lens to the limitless canvas of the screen. We orchestrate film, motion, and interaction to tell stories that <strong style="color:var(--text-primary); font-weight:600;">linger long after the screen goes dark.</strong></p>
     </section>
 
     <section id="services" class="services-section">
-        <h2 class="section-title">Our Services</h2>
+        <h2 class="section-title">Disciplines</h2>
         <div class="services-carousel">
-            <div class="carousel-pin">
-                <div class="horizontal-container">
-                    <!-- Cards will be generated by JavaScript -->
+            <div class="horizontal-container">
                 </div>
-            </div>
         </div>
     </section>
 
     <section id="work" class="work-section">
         <h2 class="section-title">Selected Works</h2>
         <div class="carousel-wrapper-3d">
-            <div class="scroll-prompt">
-                <span>Scroll to rotate</span>
-                <div class="scroll-arrow"></div>
-            </div>
             <div class="carousel-track-3d" id="carouselTrack">
-    <a href="https://www.youtube.com/watch?v=jC0DQciF1tA" target="_blank" rel="noopener noreferrer" class="carousel-item-3d">
-        <img src="/witb.png" alt="witb">
-        <div class="carousel-title-3d">What's In The Box?</div>
-    </a>
-    <a href="https://cpsglobal.org/" target="_blank" rel="noopener noreferrer" class="carousel-item-3d">
-        <img src="/cps.png" alt="CPS Global">
-        <div class="carousel-title-3d">CPS Global</div>
-    </a>
-    <a href="https://dmaxx.ae/" target="_blank" rel="noopener noreferrer" class="carousel-item-3d">
-        <img src="/dmaxx.png" alt="dmaxx">
-        <div class="carousel-title-3d">DMAXX Properties</div>
-    </a>
-    <a href="https://zehban.com/" target="_blank" rel="noopener noreferrer" class="carousel-item-3d">
-        <img src="/zehban.jpg" alt="Zeh Ban">
-        <div class="carousel-title-3d">ZEH BAN</div>
-    </a>
-    <a href="https://no-medicine.com/" target="_blank" rel="noopener noreferrer" class="carousel-item-3d">
-        <img src="/nomed.png" alt="No Medicine">
-        <div class="carousel-title-3d">No Medicine</div>
-    </a>
-    <a href="https://izharkhan.com/" target="_blank" rel="noopener noreferrer" class="carousel-item-3d">
-        <img src="/izharkhan.png" alt="Izhar Khan">
-        <div class="carousel-title-3d">Izhar Khan</div>
-    </a>
-</div>
+                <a href="https://example.com/project1" target="_blank" rel="noopener noreferrer" class="carousel-item-3d interactable" data-cursor="View">
+                    <img src="/witb.png" alt="witb">
+                    <div class="carousel-title-3d">What's In The Box?</div>
+                </a>
+                <a href="https://example.com/project2" target="_blank" rel="noopener noreferrer" class="carousel-item-3d interactable" data-cursor="View">
+                    <img src="/cps.png" alt="CPS Global">
+                    <div class="carousel-title-3d">CPS Global</div>
+                </a>
+                <a href="https://example.com/project3" target="_blank" rel="noopener noreferrer" class="carousel-item-3d interactable" data-cursor="View">
+                    <img src="/dmaxx.png" alt="dmaxx">
+                    <div class="carousel-title-3d">DMAXX Properties</div>
+                </a>
+                <a href="https://example.com/project4" target="_blank" rel="noopener noreferrer" class="carousel-item-3d interactable" data-cursor="View">
+                    <img src="/zehban.jpg" alt="Zeh Ban">
+                    <div class="carousel-title-3d">ZEH BAN</div>
+                </a>
+                <a href="https://example.com/project5" target="_blank" rel="noopener noreferrer" class="carousel-item-3d interactable" data-cursor="View">
+                    <img src="/nomed.png" alt="No Medicine">
+                    <div class="carousel-title-3d">No Medicine</div>
+                </a>
+                <a href="https://izharkhan.com/" target="_blank" rel="noopener noreferrer" class="carousel-item-3d interactable" data-cursor="View">
+                    <img src="/izharkhan.png" alt="Izhar Khan">
+                    <div class="carousel-title-3d">Izhar Khan</div>
+                </a>
             </div>
         </div>
     </section>
 
     <section id="contact" class="contact-section">
-        <div class="contact-content">
-            <h2>Got a story to tell?<br>
-Get In Touch.
-</h2>
-
-            <div class="contact-form">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" placeholder="Your full name">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="Your email address">
-                </div>
-                <div class="form-group">
-                    <label for="project">Project Type</label>
-                    <input type="text" id="project" placeholder="Website, Branding, Animation, etc.">
-                </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" rows="5" placeholder="Tell us about your project..."></textarea>
-                </div>
-                <button class="submit-btn">Submit Project Request</button>
+        <h2>The Next Frame<br><i>Is Yours.</i></h2>
+        <p class="contact-sub">We collaborate with forward-thinking brands to craft digital experiences with a cinematic pulse. Let's discuss your vision.</p>
+        <div class="contact-form">
+            <div class="form-group">
+                <input type="text" placeholder="YOUR NAME" class="interactable" data-cursor="Type">
             </div>
-
-            <div class="back-to-top-container">
-                <button class="back-to-top" id="backToTop">Back to Top</button>
+            <div class="form-group">
+                <input type="email" placeholder="YOUR EMAIL" class="interactable" data-cursor="Type">
             </div>
-
-            <div class="copyright">© 2025 DesFolk Studio. All rights reserved.</div>
+            <div class="form-group">
+                <textarea rows="3" placeholder="PROJECT DETAILS" class="interactable" data-cursor="Type"></textarea>
+            </div>
+            <button class="submit-btn interactable" data-cursor="Submit">Start The Conversation</button>
         </div>
     </section>
 
-    <button class="scroll-to-top" id="scrollToTop">
-        <svg viewBox="0 0 24 24">
-            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
-        </svg>
-    </button>
-
-    <button class="theme-toggle" id="themeToggle">
-        <svg viewBox="0 0 24 24">
-            <path d="M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z" />
-        </svg>
-    </button>
-
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Services without video URLs (simpler version)
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. Lenis Smooth Scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            smoothTouch: false,
+        });
+
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000) });
+        gsap.ticker.lagSmoothing(0, 0);
+
+        // 2. PERFECTED SPLIT CURSOR
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorText = document.querySelector('.cursor-text-container');
+        
+        if (window.matchMedia("(pointer: fine)").matches) {
+            const xToDot = gsap.quickTo(cursorDot, "x", {duration: 0.15, ease: "power3"});
+            const yToDot = gsap.quickTo(cursorDot, "y", {duration: 0.15, ease: "power3"});
+            const xToText = gsap.quickTo(cursorText, "x", {duration: 0.15, ease: "power3"});
+            const yToText = gsap.quickTo(cursorText, "y", {duration: 0.15, ease: "power3"});
+
+            window.addEventListener("mousemove", e => {
+                xToDot(e.clientX);
+                yToDot(e.clientY);
+                xToText(e.clientX);
+                yToText(e.clientY);
+            });
+
+            window.bindCursorInteractions = function() {
+                document.querySelectorAll('.interactable, a, button, input, textarea').forEach(el => {
+                    el.addEventListener('mouseenter', (e) => {
+                        const text = e.target.getAttribute('data-cursor') || '';
+                        cursorText.innerText = text;
+                        cursorDot.classList.add('active');
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        cursorText.innerText = '';
+                        cursorDot.classList.remove('active');
+                    });
+                });
+            };
+            window.bindCursorInteractions();
+        }
+
+        // 3. Three.js WebGL Pure Monochromatic Fluid
+        const canvas = document.querySelector('#webgl-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.z = 2;
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const geometry = new THREE.PlaneGeometry(5, 5, 128, 128);
+
+        const material = new THREE.ShaderMaterial({
+            vertexShader: `
+                uniform float uTime;
+                varying vec2 vUv;
+                varying float vElevation;
+                void main() {
+                    vUv = uv;
+                    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+                    float elevation = sin(modelPosition.x * 2.0 + uTime * 0.4) * 0.08 
+                                    + sin(modelPosition.y * 1.5 + uTime * 0.3) * 0.08;
+                    modelPosition.z += elevation;
+                    vElevation = elevation;
+                    gl_Position = projectionMatrix * viewMatrix * modelPosition;
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 uColor1;
+                uniform vec3 uColor2;
+                varying float vElevation;
+                void main() {
+                    float mixStrength = (vElevation + 0.16) * 3.0;
+                    vec3 color = mix(uColor1, uColor2, mixStrength);
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `,
+            uniforms: {
+                uTime: { value: 0 },
+                uColor1: { value: new THREE.Color('#050505') }, 
+                uColor2: { value: new THREE.Color('#141414') }  
+            }
+        });
+
+        const plane = new THREE.Mesh(geometry, material);
+        plane.rotation.x = -Math.PI * 0.2; 
+        scene.add(plane);
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        const clock = new THREE.Clock();
+        function tick() {
+            material.uniforms.uTime.value = clock.getElapsedTime() * 0.4; 
+            if (window.matchMedia("(pointer: fine)").matches) {
+                const rect = cursorDot.getBoundingClientRect();
+                const mouseX = rect.left || window.innerWidth / 2;
+                const mouseY = rect.top || window.innerHeight / 2;
+                plane.rotation.y = (mouseX / window.innerWidth - 0.5) * 0.05;
+                plane.rotation.x = -Math.PI * 0.2 + (mouseY / window.innerHeight - 0.5) * 0.05;
+            }
+            renderer.render(scene, camera);
+            window.requestAnimationFrame(tick);
+        }
+        tick();
+
+        // 4. Premium Monochromatic Theme Toggle
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            
+            if (isLight) {
+                themeIcon.setAttribute('d', 'M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z');
+                gsap.to(material.uniforms.uColor1.value, { r: 0.95, g: 0.94, b: 0.92, duration: 1.5, ease: "power2.inOut" });
+                gsap.to(material.uniforms.uColor2.value, { r: 0.90, g: 0.89, b: 0.87, duration: 1.5, ease: "power2.inOut" });
+            } else {
+                themeIcon.setAttribute('d', 'M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z');
+                gsap.to(material.uniforms.uColor1.value, { r: 0.02, g: 0.02, b: 0.02, duration: 1.5, ease: "power2.inOut" });
+                gsap.to(material.uniforms.uColor2.value, { r: 0.08, g: 0.08, b: 0.08, duration: 1.5, ease: "power2.inOut" });
+            }
+        });
+
+        // 5. Capabilities Content & BROWSER AUTOPLAY FIX
         const services = [
-            { id: 1, title: "Visual Effects" },
-            { id: 2, title: "Animation" },
-            { id: 3, title: "Filmmaking" },
-            { id: 4, title: "UI/UX Design" },
-            { id: 5, title: "Web Development" }
+            {
+                title: "The Lens",
+                subtitle: "Live Action",
+                desc: "Capturing the raw, unfiltered human element. We shoot with a cinematic eye, anchoring your narrative in striking, grounded reality.",
+                videoSrc: "https://assets.mixkit.co/videos/preview/mixkit-ink-swirling-in-water-568-large.mp4"
+            },
+            {
+                title: "The Illusion",
+                subtitle: "VFX & Post-Reality",
+                desc: "Bending reality to our will. We craft invisible, seamless visual effects that make the impossible feel entirely tangible.",
+                videoSrc: "https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-connection-lines-97354-large.mp4"
+            },
+            {
+                title: "The Kinetic",
+                subtitle: "Motion & Animation",
+                desc: "Breathing life into the static. We use rhythm, weight, and movement to turn complex ideas into visceral visual poetry.",
+                videoSrc: "https://assets.mixkit.co/videos/preview/mixkit-3d-animation-of-a-sphere-rotating-97034-large.mp4"
+            },
+            {
+                title: "The Interface",
+                subtitle: "Spatial & Interactive",
+                desc: "A beautiful video is meant to be watched; a beautiful digital space is meant to be felt. We build fluid, intuitive experiences.",
+                videoSrc: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4"
+            }
         ];
 
         const container = document.querySelector('.horizontal-container');
-
-        services.forEach(service => {
+        
+        services.forEach((service, index) => {
             const card = document.createElement('div');
-            card.className = 'service-card';
+            card.className = 'service-card interactable';
             
             card.innerHTML = `
-                <div class="service-title">
-                    <span>${service.title}</span>
-                    <span>${service.title}</span>
+                <video class="service-video" src="${service.videoSrc}" loop muted playsinline crossorigin="anonymous"></video>
+                <div class="service-content">
+                    <div class="service-subtitle">${service.subtitle}</div>
+                    <div class="service-title">${service.title}</div>
+                    <p class="service-desc">${service.desc}</p>
                 </div>
-                <div class="service-number">0${service.id}</div>
+                <div class="service-number">0${index+1}</div>
             `;
-            
             container.appendChild(card);
 
-            card.addEventListener('mouseenter', () => {
-                gsap.to(card, { scale: 1.03, duration: 0.3, ease: "power2.out" });
-            });
+            const vid = card.querySelector('video');
+            const title = card.querySelector('.service-title');
+            const subtitle = card.querySelector('.service-subtitle');
+            const desc = card.querySelector('.service-desc');
+            const num = card.querySelector('.service-number');
             
-            card.addEventListener('mouseleave', () => {
-                gsap.to(card, { scale: 1, duration: 0.3, ease: "power2.out" });
-            });
-        });
-
-        // New hero section functionality
-        const heroVideo = document.getElementById('heroVideo');
-        const videoControl = document.getElementById('videoControl');
-        const playPauseIcon = document.getElementById('playPauseIcon');
-        const particlesContainer = document.getElementById('particles');
-
-        // Set initial play/pause icon correctly
-        playPauseIcon.setAttribute('d', 'M6,4 L10,4 L10,20 L6,20 Z M14,4 L18,4 L18,20 L14,20 Z');
-
-        // Create particles effect
-        function createParticles() {
-            const particleCount = 50;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random position
-                const xPos = Math.floor(Math.random() * 100);
-                const yPos = Math.floor(Math.random() * 100);
-                particle.style.left = `${xPos}%`;
-                particle.style.top = `${yPos}%`;
-                
-                // Random size
-                const size = Math.random() * 3 + 1;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random animation duration
-                const duration = Math.random() * 4 + 2;
-                particle.style.animationDuration = `${duration}s`;
-                
-                // Random delay
-                const delay = Math.random() * 5;
-                particle.style.animationDelay = `${delay}s`;
-                
-                particlesContainer.appendChild(particle);
+            // THE AUTOPLAY BYPASS
+            vid.muted = true;
+            let playPromise = vid.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Force play on first touch/scroll if blocked
+                    window.addEventListener('scroll', () => vid.play(), { once: true });
+                    window.addEventListener('touchstart', () => vid.play(), { once: true });
+                });
             }
-        }
-
-        // Video play/pause control
-        let isVideoPlaying = true;
-
-        videoControl.addEventListener('click', () => {
-            if (isVideoPlaying) {
-                heroVideo.pause();
-                playPauseIcon.setAttribute('d', 'M6,4 L20,12 L6,20 Z');
-            } else {
-                heroVideo.play();
-                playPauseIcon.setAttribute('d', 'M6,4 L10,4 L10,20 L6,20 Z M14,4 L18,4 L18,20 L14,20 Z');
-            }
-            isVideoPlaying = !isVideoPlaying;
-        });
-
-        // Mouse move parallax effect
-        document.querySelector('.hero').addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.clientX) / 50;
-            const y = (window.innerHeight / 2 - e.clientY) / 50;
             
-            gsap.to(heroVideo, {
-                duration: 1.5,
-                x: x,
-                y: y,
-                ease: "power2.out"
-            });
-        });
-
-        // Initialize particles
-        createParticles();
-
-        // GSAP Carousel Animation
-        gsap.registerPlugin(ScrollTrigger);
-        const containerWidth = container.scrollWidth;
-
-        gsap.to(container, {
-            x: () => -(containerWidth - window.innerWidth),
-            ease: "none",
-            scrollTrigger: {
-                trigger: ".services-carousel",
-                pin: true,
-                scrub: 1,
-                start: "top top",
-                end: () => `+=${containerWidth}`,
-                invalidateOnRefresh: true,
-                anticipatePin: 1
+            if (window.matchMedia("(pointer: fine)").matches) {
+                card.addEventListener('mouseenter', () => {
+                    card.classList.add('video-active'); 
+                    title.style.color = '#ffffff';
+                    subtitle.style.color = '#ffffff';
+                    desc.style.color = 'rgba(255,255,255,0.9)';
+                    num.style.color = '#ffffff';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.classList.remove('video-active');
+                    title.style.color = '';
+                    subtitle.style.color = '';
+                    desc.style.color = '';
+                    num.style.color = '';
+                });
             }
         });
 
-        const serviceCardsGSAP = gsap.utils.toArray('.service-card');
-        serviceCardsGSAP.forEach(card => {
-            gsap.fromTo(card, { opacity: 0.2 }, {
-                opacity: 1,
+        if (window.bindCursorInteractions) window.bindCursorInteractions();
+
+        // 6. GSAP UNIVERSAL LAYOUTS (Both Mobile & Desktop)
+        let mm = gsap.matchMedia();
+
+        mm.add({
+            isDesktop: "(min-width: 769px)",
+            isMobile: "(max-width: 768px)"
+        }, (context) => {
+            let { isDesktop } = context.conditions;
+
+            // HORIZONTAL SCROLL (Universal)
+            container.style.paddingRight = isDesktop ? "30vw" : "10vw"; 
+            let scrollAmount = container.scrollWidth - window.innerWidth;
+            const cards = gsap.utils.toArray('.service-card');
+
+            gsap.to(container, {
+                x: -scrollAmount,
+                ease: "none",
                 scrollTrigger: {
-                    trigger: card,
-                    containerAnimation: ScrollTrigger.getById(container),
-                    start: "left 75%",
-                    end: "left 25%",
-                    scrub: true
+                    trigger: ".services-carousel",
+                    pin: true,
+                    scrub: 1,
+                    start: "center center",
+                    end: () => `+=${scrollAmount * (isDesktop ? 3 : 2)}`, 
+                    snap: {
+                        snapTo: 1 / (cards.length - 1),
+                        duration: 0.4,
+                        ease: "power1.inOut"
+                    },
+                    invalidateOnRefresh: true
                 }
             });
-        });
 
-        init3DCarousel();
-        initNavigation();
-        initDarkModeToggle();
-        animateHero();
-        initScrollToTop();
-        initProgressBar();
-
-        document.getElementById('heroBtn').addEventListener('click', () => {
-            const servicesSection = document.getElementById('services');
-            if (servicesSection) {
-                const headerHeight = document.querySelector('header').offsetHeight;
-                const targetPosition = servicesSection.offsetTop - headerHeight;
-                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-            }
-        });
-
-        document.getElementById('backToTop').addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        function init3DCarousel() {
+            // 3D CAROUSEL (Universal)
             const items = document.querySelectorAll(".carousel-item-3d");
             const track = document.getElementById("carouselTrack");
-            let radius = window.innerWidth <= 768 ? 300 : 500;
-
-            function positionItems() {
-                const itemCount = items.length;
-                for (let i = 0; i < itemCount; i++) {
-                    const theta = (360 / itemCount) * i;
-                    const item = items[i];
-                    item.style.transform = `translate(-50%, -50%) rotateY(${theta}deg) translateZ(${radius}px)`;
-                }
-            }
-            positionItems();
-
-            // Responsive radius adjustment
-            window.addEventListener('resize', () => {
-                radius = window.innerWidth <= 768 ? 300 : 500;
-                positionItems();
+            const radius = isDesktop ? 450 : 250;
+            
+            items.forEach((item, i) => {
+                const theta = (360 / items.length) * i;
+                item.style.transform = `translate(-50%, -50%) rotateY(${theta}deg) translateZ(${radius}px)`;
             });
 
             gsap.to(track, {
-                rotationY: 720,
+                rotationY: -360,
                 ease: "none",
                 scrollTrigger: {
-                    trigger: ".carousel-wrapper-3d",
-                    start: "top top",
-                    end: "+=2000",
-                    scrub: true,
+                    trigger: ".work-section",
+                    start: "center center",
+                    end: "+=1500",
+                    scrub: 1,
                     pin: true
                 }
             });
-        }
+        });
 
-        function initNavigation() {
-            const navToggle = document.getElementById('navToggle');
-            const navOverlay = document.getElementById('navOverlay');
-            const navMenu = document.getElementById('navMenu');
-            let isMenuOpen = false;
-
-            navToggle.addEventListener('click', toggleMenu);
-
-            const menuLinks = navMenu.querySelectorAll('a');
-            menuLinks.forEach(link => {
-                // Replace the existing click handler with this:
-link.addEventListener('click', (e) => {
-    const href = link.getAttribute('href');
-    
-    // Only prevent default for anchor links (#)
-    if (href.startsWith('#')) {
-        e.preventDefault();
-        const targetSection = document.querySelector(href);
-        if (targetSection) {
-            closeMenu();
-            setTimeout(() => {
-                const headerHeight = document.querySelector('header').offsetHeight;
-                const targetPosition = targetSection.offsetTop - headerHeight;
-                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-            }, 500);
-        }
-    } else {
-        // For page links (about.html), just close the menu
-        closeMenu();
-        // Browser will handle navigation normally
-    }
-});
-            });
-
-            function toggleMenu() {
-                !isMenuOpen ? openMenu() : closeMenu();
-            }
-
-            function openMenu() {
-                isMenuOpen = true;
-                navOverlay.classList.add('active');
-                navToggle.textContent = 'Close';
-                const menuLinks = navMenu.querySelectorAll('a');
-                gsap.fromTo(menuLinks, { y: '100%' }, {
-                    y: '0%',
-                    duration: 0.6,
-                    stagger: 0.1,
-                    ease: "power3.out",
-                    delay: 0.2
-                });
-            }
-
-            function closeMenu() {
-                isMenuOpen = false;
-                navOverlay.classList.remove('active');
-                navToggle.textContent = 'Menu';
-                const menuLinks = navMenu.querySelectorAll('a');
-                gsap.to(menuLinks, {
-                    y: '100%',
-                    duration: 0.4,
-                    stagger: 0.05,
-                    ease: "power3.in"
-                });
-            }
-        }
-
-        function animateHero() {
-            const chars = document.querySelectorAll('#heroTitle .char');
-            gsap.fromTo(chars, { opacity: 0, y: 100 }, {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                stagger: 0.03,
-                delay: 0.2,
-                ease: "power3.out"
-            });
-
-            const heroPara = document.querySelector('.hero p');
-            gsap.to(heroPara, {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                delay: 1.0,
-                ease: "power3.out"
-            });
-        }
-
-        function initDarkModeToggle() {
-            const themeToggle = document.getElementById('themeToggle');
-            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-            const svgPath = themeToggle.querySelector('path');
-
-            if (prefersDarkScheme.matches) {
-                document.body.classList.add('dark-mode');
-                svgPath.setAttribute('d', 'M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z');
-            }
-
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-                if (document.body.classList.contains('dark-mode')) {
-                    svgPath.setAttribute('d', 'M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z');
-                } else {
-                    svgPath.setAttribute('d', 'M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z');
-                }
-            });
-        }
-
-        function initScrollToTop() {
-            const scrollToTopBtn = document.getElementById('scrollToTop');
-            window.addEventListener('scroll', () => {
-                scrollToTopBtn.classList.toggle('visible', window.scrollY > 500);
-            });
-            scrollToTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        }
-
-        function initProgressBar() {
-            const progressBar = document.getElementById('progressBar');
-            window.addEventListener('scroll', () => {
-                const totalHeight = document.body.scrollHeight - window.innerHeight;
-                const progress = (window.scrollY / totalHeight) * 100;
-                progressBar.style.width = progress + '%';
-            });
-        }
+        // 7. Progress Bar
+        window.addEventListener('scroll', () => {
+            const progress = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        });
     });
-</script>
+    </script>
 </body>
 </html>
