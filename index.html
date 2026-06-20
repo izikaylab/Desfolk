@@ -417,7 +417,7 @@
             justify-content: flex-end;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            transform: translate3d(0, 0, 0); /* Force GPU Acceleration Layer */
+            transform: translate3d(0, 0, 0); 
             will-change: border-color;
             transition: border-color 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
@@ -515,7 +515,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.85);
         }
 
         /* Contact Section */
@@ -634,16 +634,16 @@
             .service-title, .service-subtitle, .service-number { color: #ffffff !important; }
             .service-desc { color: rgba(255,255,255,0.9) !important; }
 
-            /* Advanced Mobile Layout Realignment */
+            /* Advanced Mobile Flow Alignment Fixes */
             .portfolio-grid-section { padding: 80px 5%; }
-            .portfolio-container { grid-template-columns: 1fr; gap: 20px; }
+            .portfolio-container { grid-template-columns: 1fr; gap: 25px; }
             .portfolio-item.vertical, .portfolio-item.horizontal { 
                 grid-column: span 1; 
                 grid-row: span 1; 
                 aspect-ratio: unset; 
                 height: auto; 
+                display: block;
             }
-            /* Transition relative flow elements instead of broken absolute sizing overlays */
             .portfolio-video { 
                 filter: grayscale(0%); 
                 opacity: 1; 
@@ -1091,13 +1091,13 @@
             }
         });
 
-        // 5.5 HYBRID PLAYBACK MANAGEMENT ENGINE
+        // 5.5 HYBRID PLAYBACK HARDWARE MANAGER
         const portfolioItems = document.querySelectorAll('.portfolio-item');
         portfolioItems.forEach(item => {
             const video = item.querySelector('.portfolio-video');
             
             if (window.matchMedia("(pointer: fine)").matches) {
-                // Desktop Mouse Hover Flow Management
+                // Desktop Mouse Actions
                 item.addEventListener('mouseenter', () => {
                     video.play().catch(() => {});
                 });
@@ -1105,11 +1105,15 @@
                     video.pause();
                 });
             } else {
-                // Touchscreen Viewport Detection Engine
+                // Mobile Viewport Touchscreen Acceleration Engine
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            video.play().catch(() => {});
+                            // Automatically wake up video layer and play when seen on screens
+                            video.play().catch(() => {
+                                // If Low Power Mode blocks it, force immediate presentation framework hook
+                                video.load(); 
+                            });
                         } else {
                             video.pause();
                         }
@@ -1117,7 +1121,7 @@
                 }, { 
                     root: null,
                     rootMargin: "0px",
-                    threshold: 0.35 // Automatically streams when 35% of the card is visible on screen
+                    threshold: 0.35
                 });
                 observer.observe(item);
             }
