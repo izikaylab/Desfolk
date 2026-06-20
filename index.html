@@ -417,7 +417,7 @@
             justify-content: flex-end;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            transform: translate3d(0, 0, 0); /* Force GPU Layer Acceleration */
+            transform: translate3d(0, 0, 0); /* Force GPU Acceleration Layer */
             will-change: border-color;
             transition: border-color 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
@@ -1097,7 +1097,7 @@
             const video = item.querySelector('.portfolio-video');
             
             if (window.matchMedia("(pointer: fine)").matches) {
-                // Desktop Fine Pointer Mouse Hover Control Flow
+                // Desktop Mouse Hover Flow Management
                 item.addEventListener('mouseenter', () => {
                     video.play().catch(() => {});
                 });
@@ -1105,7 +1105,7 @@
                     video.pause();
                 });
             } else {
-                // Touchscreen Framework - Autoplay exactly when scrolled into the viewport
+                // Touchscreen Viewport Detection Engine
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -1117,7 +1117,7 @@
                 }, { 
                     root: null,
                     rootMargin: "0px",
-                    threshold: 0.35 // Triggers cleanly when 35% of the video frame is on-screen
+                    threshold: 0.35 // Automatically streams when 35% of the card is visible on screen
                 });
                 observer.observe(item);
             }
