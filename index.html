@@ -393,7 +393,7 @@
             transition: color 0.4s ease;
         }
 
-        /* HIGHLY OPTIMIZED PORTFOLIO MASONRY GRID STYLES */
+        /* HIGH-PERFORMANCE MASONRY GRID STYLES */
         .portfolio-grid-section {
             padding: 150px 5%;
             width: 100%;
@@ -417,7 +417,7 @@
             justify-content: flex-end;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            transform: translate3d(0, 0, 0); /* Force GPU Acceleration Layer */
+            transform: translate3d(0, 0, 0); /* Force GPU Layer Acceleration */
             will-change: border-color;
             transition: border-color 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
@@ -606,7 +606,7 @@
         .theme-toggle:hover { border-color: var(--text-primary); }
         .theme-toggle svg { width: 18px; height: 18px; fill: currentColor; transition: fill 0.4s ease; }
 
-        /* Mobile Fixes */
+        /* Complete Mobile Framework Adaptive Overrides */
         @media (max-width: 1024px) {
             .portfolio-container { grid-template-columns: repeat(2, 1fr); gap: 20px; }
         }
@@ -634,11 +634,24 @@
             .service-title, .service-subtitle, .service-number { color: #ffffff !important; }
             .service-desc { color: rgba(255,255,255,0.9) !important; }
 
-            /* Portfolio Mobile Grid Framework */
+            /* Advanced Mobile Layout Realignment */
             .portfolio-grid-section { padding: 80px 5%; }
             .portfolio-container { grid-template-columns: 1fr; gap: 20px; }
-            .portfolio-item.vertical, .portfolio-item.horizontal { grid-column: span 1; grid-row: span 1; aspect-ratio: unset; height: auto; }
-            .portfolio-video { filter: grayscale(0%); opacity: 1; position: relative; height: auto; display: block; }
+            .portfolio-item.vertical, .portfolio-item.horizontal { 
+                grid-column: span 1; 
+                grid-row: span 1; 
+                aspect-ratio: unset; 
+                height: auto; 
+            }
+            /* Transition relative flow elements instead of broken absolute sizing overlays */
+            .portfolio-video { 
+                filter: grayscale(0%); 
+                opacity: 1; 
+                position: relative; 
+                height: auto; 
+                display: block; 
+                width: 100%;
+            }
 
             .work-section { padding: 80px 0; }
             .carousel-wrapper-3d { height: 75vh; perspective: 1200px; }
@@ -795,7 +808,7 @@
             <div class="form-group">
                 <textarea rows="3" placeholder="PROJECT DETAILS" class="interactable" data-cursor="Type"></textarea>
             </div>
-            <div class="submit-btn interactable" data-cursor="Submit">Start The Conversation</div>
+            <button class="submit-btn interactable" data-cursor="Submit">Start The Conversation</button>
         </div>
     </section>
 
@@ -1078,13 +1091,13 @@
             }
         });
 
-        // 5.5 SMART HIGH-PERFORMANCE PORTFOLIO ENGINE (MOBILE & DESKTOP COMPATIBLE)
+        // 5.5 HYBRID PLAYBACK MANAGEMENT ENGINE
         const portfolioItems = document.querySelectorAll('.portfolio-item');
         portfolioItems.forEach(item => {
             const video = item.querySelector('.portfolio-video');
             
             if (window.matchMedia("(pointer: fine)").matches) {
-                // Desktop Hover Controls
+                // Desktop Fine Pointer Mouse Hover Control Flow
                 item.addEventListener('mouseenter', () => {
                     video.play().catch(() => {});
                 });
@@ -1092,7 +1105,7 @@
                     video.pause();
                 });
             } else {
-                // Mobile Autoplay Management via IntersectionObserver
+                // Touchscreen Framework - Autoplay exactly when scrolled into the viewport
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -1101,7 +1114,11 @@
                             video.pause();
                         }
                     });
-                }, { threshold: 0.2 });
+                }, { 
+                    root: null,
+                    rootMargin: "0px",
+                    threshold: 0.35 // Triggers cleanly when 35% of the video frame is on-screen
+                });
                 observer.observe(item);
             }
         });
