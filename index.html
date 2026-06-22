@@ -434,6 +434,7 @@
             aspect-ratio: 16 / 9;
         }
 
+        /* INTENTIONAL GREYED OUT baseline PLACEMENT FOR INACTIVE STATES */
         .portfolio-video {
             position: absolute;
             top: 0;
@@ -442,7 +443,7 @@
             height: 100%;
             object-fit: cover;
             filter: grayscale(100%);
-            opacity: 0.25;
+            opacity: 0.25; 
             pointer-events: none;
             transform: scale(1) translate3d(0, 0, 0);
             will-change: transform, opacity, filter;
@@ -612,11 +613,10 @@
             .service-title, .service-subtitle, .service-number { color: #ffffff !important; }
             .service-desc { color: rgba(255,255,255,0.9) !important; }
 
-            /* Portfolio Mobile Flow Alignment - Split beautifully for 2 columns per row */
+            /* Portfolio Mobile Alignment - Split for 2 columns per row */
             .portfolio-grid-section { padding: 60px 4%; }
             .portfolio-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
             
-            /* Vertical videos take up 1 column cell */
             .portfolio-item.vertical { 
                 grid-column: span 1; 
                 grid-row: span 1; 
@@ -625,7 +625,6 @@
                 display: block;
             }
             
-            /* FIX: Horizontal videos cleanly take up the full row width (span 2 columns) */
             .portfolio-item.horizontal { 
                 grid-column: span 2; 
                 grid-row: span 1; 
@@ -634,9 +633,15 @@
                 display: block;
             }
             
+            /* Active mobile videos fade to clear saturation when targeted by scroll position */
+            .portfolio-item.mobile-focused .portfolio-video {
+                filter: grayscale(0%);
+                opacity: 1;
+            }
+            
             .portfolio-video { 
-                filter: grayscale(0%); 
-                opacity: 1; 
+                filter: grayscale(100%); 
+                opacity: 0.35; 
                 position: relative; 
                 height: auto; 
                 display: block; 
@@ -769,12 +774,11 @@
             <a href="https://www.instagram.com/iamdrmariakhan/" target="_blank" rel="noopener noreferrer" class="portfolio-item vertical interactable" data-cursor="Play">
                 <video class="portfolio-video" src="13.mp4" poster="13.jpg" loop muted playsinline preload="none"></video>
             </a>
-        
         </div>
     </section>
 
     <section id="work" class="work-section">
-        <h2 class="section-title">Selected Works</h2>
+        <h2 class="section-title">Interfaces</h2>
         <div class="carousel-wrapper-3d">
             <div class="carousel-track-3d" id="carouselTrack">
                 <a href="https://example.com/project1" target="_blank" rel="noopener noreferrer" class="carousel-item-3d interactable" data-cursor="View">
@@ -1101,13 +1105,15 @@
             }
         });
 
-        // 5.5 HYBRID PLAYBACK HARDWARE MANAGER
+        // 5.5 HIGH-PERFORMANCE MOBILE PLAYBACK MANAGEMENT ENGINE (SINGLE THREAD ALLOCATOR)
         const portfolioItems = document.querySelectorAll('.portfolio-item');
+        let activeMobileVideo = null;
+
         portfolioItems.forEach(item => {
             const video = item.querySelector('.portfolio-video');
             
             if (window.matchMedia("(pointer: fine)").matches) {
-                // Desktop Mouse Actions
+                // Desktop Fine Pointer Mouse Actions
                 item.addEventListener('mouseenter', () => {
                     video.play().catch(() => {});
                 });
@@ -1115,21 +1121,33 @@
                     video.pause();
                 });
             } else {
-                // Mobile Viewport Touchscreen Acceleration Engine
+                // Smartphone Viewport Observer - Safe Hardware Streaming Optimization
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
+                            // Immediately terminate the previously running video layer to unlock processing bands
+                            if (activeMobileVideo && activeMobileVideo !== video) {
+                                activeMobileVideo.pause();
+                                activeMobileVideo.parentElement.classList.remove('mobile-focused');
+                            }
+                            
+                            activeMobileVideo = video;
+                            item.classList.add('mobile-focused');
                             video.play().catch(() => {
                                 video.load(); 
                             });
                         } else {
-                            video.pause();
+                            if (activeMobileVideo === video) {
+                                video.pause();
+                                item.classList.remove('mobile-focused');
+                                activeMobileVideo = null;
+                            }
                         }
                     });
                 }, { 
                     root: null,
-                    rootMargin: "0px",
-                    threshold: 0.35
+                    rootMargin: "-25% 0px -25% 0px", // Cuts checks directly to active middle 50% quadrant parameters
+                    threshold: 0.5
                 });
                 observer.observe(item);
             }
