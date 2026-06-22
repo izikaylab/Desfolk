@@ -458,7 +458,7 @@
             }
         }
 
-        /* 3D Carousel */
+        /* 3D Carousel (Optimized Layout) */
         .work-section { padding: 150px 0; overflow: hidden; }
 
         .carousel-wrapper-3d {
@@ -467,6 +467,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
         }
 
         .carousel-track-3d {
@@ -583,30 +584,7 @@
 
         .submit-btn:hover { background: var(--text-primary); color: var(--bg-primary); }
 
-        /* Theme Toggle */
-        .theme-toggle {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            z-index: 1000;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-primary);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: border-color 0.4s ease;
-            backdrop-filter: blur(5px);
-            cursor: pointer;
-        }
-
-        .theme-toggle:hover { border-color: var(--text-primary); }
-        .theme-toggle svg { width: 18px; height: 18px; fill: currentColor; transition: fill 0.4s ease; }
-
-        /* Complete Mobile Framework Adaptive Overrides */
+        /* UNBREAKABLE SMARTPHONE OVERRIDES Framework */
         @media (max-width: 1024px) {
             .portfolio-container { grid-template-columns: repeat(2, 1fr); gap: 20px; }
         }
@@ -634,16 +612,28 @@
             .service-title, .service-subtitle, .service-number { color: #ffffff !important; }
             .service-desc { color: rgba(255,255,255,0.9) !important; }
 
-            /* Advanced Mobile Flow Alignment Fixes */
-            .portfolio-grid-section { padding: 80px 5%; }
-            .portfolio-container { grid-template-columns: 1fr; gap: 25px; }
-            .portfolio-item.vertical, .portfolio-item.horizontal { 
+            /* Portfolio Mobile Flow Alignment - Split beautifully for 2 columns per row */
+            .portfolio-grid-section { padding: 60px 4%; }
+            .portfolio-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            
+            /* Vertical videos take up 1 column cell */
+            .portfolio-item.vertical { 
                 grid-column: span 1; 
                 grid-row: span 1; 
                 aspect-ratio: unset; 
                 height: auto; 
                 display: block;
             }
+            
+            /* FIX: Horizontal videos cleanly take up the full row width (span 2 columns) */
+            .portfolio-item.horizontal { 
+                grid-column: span 2; 
+                grid-row: span 1; 
+                aspect-ratio: unset; 
+                height: auto; 
+                display: block;
+            }
+            
             .portfolio-video { 
                 filter: grayscale(0%); 
                 opacity: 1; 
@@ -653,13 +643,35 @@
                 width: 100%;
             }
 
+            /* Carousel Mobile Optimization (Converts 3D Hijack to Fluid Touch Swipe Layout) */
             .work-section { padding: 80px 0; }
-            .carousel-wrapper-3d { height: 75vh; perspective: 1200px; }
+            .carousel-wrapper-3d { 
+                height: auto; 
+                overflow-x: auto; 
+                justify-content: flex-start;
+                padding: 20px 5%;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+            .carousel-track-3d { 
+                display: flex; 
+                gap: 25px; 
+                width: max-content; 
+                height: auto; 
+                transform: none !important; 
+                transform-style: flat;
+            }
             .carousel-item-3d { 
-                width: 60vw; 
-                height: 45vh; 
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none !important;
+                flex-shrink: 0;
+                width: 75vw; 
+                height: 50vh; 
                 opacity: 1;
                 filter: grayscale(0%); 
+                scroll-snap-align: center;
             }
         }
     </style>
@@ -718,7 +730,7 @@
             <a href="https://www.instagram.com/uefinsights/" target="_blank" rel="noopener noreferrer" class="portfolio-item vertical interactable" data-cursor="Play">
                 <video class="portfolio-video" src="2.mp4" poster="2.jpg" loop muted playsinline preload="none"></video>
             </a>
-            <a href="https://www.youtube.com/watch?v=jC0DQciF1tA" target="_blank" rel="noopener noreferrer" class="portfolio-item horizontal interactable" data-cursor="Play">
+            <a href="https://www.youtube.com/watch?v=hjjL6TvEPAo&list=PLnGUAkRwtKbjmS2Sv0APIPklUa0weNL2H&index=5" target="_blank" rel="noopener noreferrer" class="portfolio-item horizontal interactable" data-cursor="Play">
                 <video class="portfolio-video" src="largevid1.mp4" poster="largevid1.jpg" loop muted playsinline preload="none"></video>
             </a>
             <a href="https://www.instagram.com/iamdrmariakhan/" target="_blank" rel="noopener noreferrer" class="portfolio-item vertical interactable" data-cursor="Play">
@@ -736,7 +748,7 @@
             <a href="https://www.instagram.com/iamdrmariakhan/" target="_blank" rel="noopener noreferrer" class="portfolio-item vertical interactable" data-cursor="Play">
                 <video class="portfolio-video" src="7.mp4" poster="7.jpg" loop muted playsinline preload="none"></video>
             </a>
-            <a href="https://www.youtube.com/watch?v=f7xTbGoBcfc&list=PLnGUAkRwtKbjmS2Sv0APIPklUa0weNL2H&index=16&t=24s" target="_blank" rel="noopener noreferrer" class="portfolio-item horizontal interactable" data-cursor="Play">
+            <a href="https://www.youtube.com/watch?v=jC0DQciF1tA&t=94s" target="_blank" rel="noopener noreferrer" class="portfolio-item horizontal interactable" data-cursor="Play">
                 <video class="portfolio-video" src="largevid2.mp4" poster="largevid2.jpg" loop muted playsinline preload="none"></video>
             </a>
             <a href="https://www.instagram.com/uefinsights/" target="_blank" rel="noopener noreferrer" class="portfolio-item vertical interactable" data-cursor="Play">
@@ -757,9 +769,7 @@
             <a href="https://www.instagram.com/iamdrmariakhan/" target="_blank" rel="noopener noreferrer" class="portfolio-item vertical interactable" data-cursor="Play">
                 <video class="portfolio-video" src="13.mp4" poster="13.jpg" loop muted playsinline preload="none"></video>
             </a>
-            <a href="https://www.instagram.com/maulanawahiduddinkhan/" target="_blank" rel="noopener noreferrer" class="portfolio-item vertical interactable" data-cursor="Play">
-                <video class="portfolio-video" src="14.mp4" poster="14.jpg" loop muted playsinline preload="none"></video>
-            </a>
+        
         </div>
     </section>
 
@@ -1109,9 +1119,7 @@
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            // Automatically wake up video layer and play when seen on screens
                             video.play().catch(() => {
-                                // If Low Power Mode blocks it, force immediate presentation framework hook
                                 video.load(); 
                             });
                         } else {
@@ -1136,7 +1144,7 @@
             isDesktop: "(min-width: 769px)",
             isMobile: "(max-width: 768px)"
         }, (context) => {
-            let { isDesktop } = context.conditions;
+            let { isDesktop, isMobile } = context.conditions;
 
             let scrollAmount = container.scrollWidth - window.innerWidth;
 
@@ -1179,24 +1187,33 @@
 
             const items = document.querySelectorAll(".carousel-item-3d");
             const track = document.getElementById("carouselTrack");
-            const radius = isDesktop ? 450 : 350; 
             
-            items.forEach((item, i) => {
-                const theta = (360 / items.length) * i;
-                item.style.transform = `translate(-50%, -50%) rotateY(${theta}deg) translateZ(${radius}px)`;
-            });
+            if (isDesktop) {
+                const radius = 450; 
+                items.forEach((item, i) => {
+                    const theta = (360 / items.length) * i;
+                    item.style.transform = `translate(-50%, -50%) rotateY(${theta}deg) translateZ(${radius}px)`;
+                });
 
-            gsap.to(track, {
-                rotationY: -360,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".work-section",
-                    start: "center center",
-                    end: "+=1500",
-                    scrub: 1,
-                    pin: true
-                }
-            });
+                gsap.to(track, {
+                    rotationY: -360,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".work-section",
+                        start: "center center",
+                        end: "+=1500",
+                        scrub: 1,
+                        pin: true
+                    }
+                });
+            } else if (isMobile) {
+                ScrollTrigger.getAll().forEach(st => {
+                    if (st.trigger === ".work-section") st.kill(true);
+                });
+                gsap.killTweensOf(track);
+                track.style.transform = "none";
+                items.forEach(item => item.style.transform = "none");
+            }
         });
 
         // 7. Progress Bar
